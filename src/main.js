@@ -15,17 +15,17 @@ import VueAxios from "vue-axios";
 /* document.token = "14";*/
 Vue.use(VueAxios, axios);
 
-/* axios.interceptors.request.use(
+axios.interceptors.request.use(
     config => {
-        if (store.getters.getToken) {
-            config.headers["Authorization"] = document.token;
+        if (document.token) {
+            config.headers["Authorization"] = "Bearer " + document.token;
         }
         return config;
     },
     error => {
         Promise.reject(error);
     }
-); */
+);
 
 const router = new VueRouter({
     mode: "hash",

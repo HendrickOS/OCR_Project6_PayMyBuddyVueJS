@@ -164,19 +164,34 @@ export default {
         this.navigate("accountpage");
     },
 
-    submit:function(){
-        /* document.token="14";
-        if (document.targetpage){
-            this.navigate(document.targetpage)
-        } */
-
-      console.log("coucou")
-      debugger
-      let user = {"username" : "springuser", "password" : "user123"}
-      this.axios
-        .post("http://localhost:8080/login", user)
+    testOtherMethod: function() {
+       this.axios
+        .get("http://localhost:8080/contacts/list")
         .then(function(response) {
           console.log(response)
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+        .finally(function() {
+
+        });
+    },
+
+    submit:function(){
+      let self = this
+      let user = {"username" : "springuser", "password" : "user123"}
+      this.axios
+        .post("http://localhost:8080/login/", user)
+        .then(function(response) {
+          console.log(response)
+          document.token=response.data;
+           if (document.targetpage){
+            self.navigate(document.targetpage)
+          }
+
+          self.testOtherMethod();
+
         })
         .catch(function(error) {
           console.log(error)
