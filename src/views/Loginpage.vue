@@ -180,7 +180,8 @@ export default {
 
     submit:function(){
       let self = this
-      let user = {"username" : "springuser", "password" : "user123"}
+      let user = {"username" : this.name, "password" : this.password}
+
       this.axios
         .post("http://localhost:8080/login/", user)
         .then(function(response) {
@@ -190,7 +191,7 @@ export default {
             self.navigate(document.targetpage)
           }
 
-          self.testOtherMethod();
+          /* self.testOtherMethod(); */
 
         })
         .catch(function(error) {
@@ -212,6 +213,7 @@ export default {
 
     show1: false,
     password: 'Password',
+    name: 'Name',
     rules: {
       required: value => !!value || 'Required.',
     }

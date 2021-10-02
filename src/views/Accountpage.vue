@@ -3,12 +3,14 @@
   <div>
     Comptes {{ token }}
 
-    <v-data-table
+   <!--  <v-data-table
     :headers="headers"
     :items="desserts"
     :items-per-page="5"
     class="elevation-1"
-  ></v-data-table>
+  ></v-data-table> -->
+
+  {{accounts}}
 
   </div>
 
@@ -32,7 +34,7 @@ export default {
       this.navigate("loginpage");
     }
     else{
-
+      this.loadAccounts()
     }
 
   },
@@ -55,9 +57,26 @@ export default {
         this.navigate("accountpage");
     },
     
+    loadAccounts: function() {
+      let self= this
+       this.axios
+        .get("http://localhost:8080/contacts/list")
+        .then(function(response) {
+          console.log(response)
+          self.accounts = response.data
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+        .finally(function() {
+
+        });
+    },
   },
 
   data: () => ({
+
+    accounts: [],
 
     headers: [
           {
