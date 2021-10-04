@@ -1,16 +1,16 @@
 <template>
 
   <div>
-    Comptes {{ token }}
+    <!-- Comptes {{ token }} -->
 
-   <!--  <v-data-table
+    <v-data-table
     :headers="headers"
-    :items="desserts"
+    :items="accounts"
     :items-per-page="5"
     class="elevation-1"
-  ></v-data-table> -->
+  ></v-data-table>
 
-  {{accounts}}
+  <!-- {{accounts}} -->
 
   </div>
 
@@ -89,13 +89,18 @@ export default {
           { text: 'Description', value: 'description' },
           { text: 'Amount', value: 'amount' },
         ],
-        desserts: [
+        /* desserts: [
           {"id":1,"connections":"Hendrick","description":"JAVA Developer","amount":50},
           {"id":101,"connections":"Hendrick","description":"JAVA Developer","amount":50},
           {"id":301,"connections":"Hendrick","description":"JAVA Developer","amount":50},
           {"id":401,"connections":"Hendrick","description":"JAVA Developer","amount":50},
           {"id":501,"connections":"Hendrick","description":"JAVA Developer","amount":50}
-        ],
+        ], */
+
+    /* desserts: [
+      for (account in accounts) : 
+        {"id": account.id, "connections": account.connection, "description": account.description, "amount": account.amount}
+    ], */
 
   }),
 
