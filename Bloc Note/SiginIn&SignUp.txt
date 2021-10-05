@@ -73,7 +73,7 @@
               </v-tab>
 
               <v-tab href="#tab-2" @click="switchToSignUp()">
-              Sign Up 
+              Sign Up
               <v-icon>mdi-heart</v-icon>
               </v-tab>
 
@@ -126,7 +126,6 @@
               ></v-text-field>
 
               <v-checkbox
-                v-if="mode == 'signIn'"
                 v-model="checkbox"
                 :error-messages="checkboxErrors"
                 label="Remember me"
@@ -135,8 +134,7 @@
                 @blur="$v.checkbox.$touch()"
               ></v-checkbox>
 
-              <v-btn class="mr-4" :disabled="!validatedFields" v-if="mode == 'signUp'" @click="submit"> create {{validatedFields}} </v-btn> 
-              <v-btn class="mr-4" :class="{'button--disabled' : !validatedFields}" v-else @click="submit"> connection </v-btn>
+              <v-btn class="mr-4" @click="submit"> connection </v-btn>
               
             </form>
 
@@ -150,6 +148,7 @@
 </template>
 
 <script>
+import func from 'vue-editor-bridge';
 import commonMixin from "../mixin/commonMixin"
 export default {
   name: "Accountpage",
@@ -164,25 +163,7 @@ export default {
 
   computed: {   
 
-    
-
-    validatedFields: function () {
-      /* debugger */
-      if (this.mode == 'signUp') {
-        if (this.email != "" && this.prenom != "" && this.nom != "" && this.password != "") {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        if (this.email != "" && this.password != "") {
-          return true;
-        } else {
-          return false;
-        }
-      }
   },
-},
 
   methods: {
 
@@ -240,31 +221,53 @@ export default {
       this.mode = 'signUp' ;
     },
 
+    signIn: function(){
+      const self = this;
+      this.$store.dispatch('signIn', {
+        email: this.email,
+        password: this.password,
+      }).then(function () {
+        /* self.$router.push('/Accountpage'); */
+        self.navigate(document.targetpage)
+      }, function (error) {
+        console.log(error);
+      })
+    },
+
+    signUp: function(){
+      const self = this;
+      this.$store.dispatch('signUp', {
+        nom: this.nom,
+        prenom: this.prenom,
+        email: this.email,
+        password: this.password,
+      }).then(function () {
+        self.login();
+      }, function (error) {
+        console.log(error);
+      })
+    },
+
   },
 
-  data () {
+  data: () => ({
 
-    return {
-      mode: 'signUp',
-      email: '',
-      prenom: '',
-      nom: '',
-      password: '',
+    drawer: false,
+    group: null,
+    tab: null,
 
-      drawer: false,
-      group: null,
-      tab: null,
+    show1: false,
+    password: 'Password',
+    name: 'Name',
+    rules: {
+      required: value => !!value || 'Required.',
+    }
+  
+  }),
 
-      show1: false,
-      password: 'Password',
-      name: 'Name',
-      rules: {
-        required: value => !!value || 'Required.',
-      }
-    };
-  },
-}
+  
 
+};
 </script>
 
 <style>
