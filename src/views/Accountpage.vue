@@ -1,20 +1,84 @@
 <template>
 
-  <div>
-    <!-- Comptes {{ token }} -->
+  <v-card
+    class="mx-auto overflow-hidden"
+    height="800"
+  >
+    <v-app-bar
+      color="deep-green" 
+      dark  
+    >
+      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
 
-    <v-data-table
-    :headers="headers"
-    :items="accounts"
-    :items-per-page="5"
-    class="elevation-1"
-  ></v-data-table>
+      <v-toolbar-title>Pay My Buddy</v-toolbar-title>
+    </v-app-bar>
 
-  <!-- {{accounts}} -->
+    <v-navigation-drawer
+      v-model="drawer"
+      absolute
+      temporary
+    >
+      <v-list
+        nav
+        dense
+      >
+        <v-list-item-group
+          v-model="group"
+          active-class="deep-purple--text text--accent-4"
+        >
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-home</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>
+              <v-btn color="primary" @click="goHomepage">Home</v-btn>
+            </v-list-item-title>
+          </v-list-item>
 
-  </div>
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-account</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>
+              <v-btn color="primary" @click="goLoginpage">Login</v-btn>
+            </v-list-item-title>
+          </v-list-item>
 
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-account</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>
+              <v-btn color="primary" @click="goAccountpage">Account</v-btn>
+            </v-list-item-title>
+          </v-list-item>
 
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
+
+    <v-sheet
+      id="scrolling-techniques-7"
+      class="overflow-y-auto"
+      max-height="600"
+    >
+
+    <v-container fluid>
+      <v-row justify="space-around">
+        
+        <v-data-table
+          :headers="headers"
+          :items="accounts"
+          :items-per-page="5"
+          class="elevation-1"
+        ></v-data-table>
+
+    </v-row>
+    </v-container>
+
+  </v-sheet>
+
+  </v-card>
 
 </template>
 
@@ -31,6 +95,7 @@ export default {
 
     if (!this.token) {
       document.targetpage="accountpage";
+      /* document.targetpage="loginpage"; */
       this.navigate("loginpage");
     }
     else{
@@ -56,6 +121,10 @@ export default {
     goAccountpage: function() {
         this.navigate("accountpage");
     },
+
+    goLoginpage: function() {
+        this.navigate("loginpage");
+    },
     
     loadAccounts: function() {
       let self= this
@@ -75,6 +144,9 @@ export default {
   },
 
   data: () => ({
+
+    drawer: false,
+    group: null,
 
     accounts: [],
 

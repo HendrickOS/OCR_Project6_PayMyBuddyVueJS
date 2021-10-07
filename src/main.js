@@ -12,7 +12,6 @@ import Loginpage from "./views/Loginpage.vue";
 
 import axios from "axios";
 import VueAxios from "vue-axios";
-/* document.token = "14";*/
 Vue.use(VueAxios, axios);
 
 axios.interceptors.request.use(

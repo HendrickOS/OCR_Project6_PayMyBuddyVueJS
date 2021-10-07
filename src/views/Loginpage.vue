@@ -5,7 +5,7 @@
     height="600"
   >
     <v-app-bar
-      color="blue" 
+      color="deep-blue" 
       dark  
     >
       <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
@@ -31,6 +31,15 @@
             </v-list-item-icon>
             <v-list-item-title>
               <v-btn color="primary" @click="goHomepage">Home</v-btn>
+            </v-list-item-title>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-account</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>
+              <v-btn color="primary" @click="goLoginpage">Login</v-btn>
             </v-list-item-title>
           </v-list-item>
 
@@ -87,13 +96,13 @@
                 v-model="nom"
                 :error-messages="nameErrors"
                 :counter="10"
-                label="LastName"
+                label="UserName"
                 required
                 @input="$v.name.$touch()"
                 @blur="$v.name.$touch()"
               ></v-text-field>
 
-              <v-text-field v-if="mode == 'signUp'"
+              <!-- <v-text-field v-if="mode == 'signUp'"
                 v-model="prenom"
                 :error-messages="nameErrors"
                 :counter="10"
@@ -101,7 +110,7 @@
                 required
                 @input="$v.name.$touch()"
                 @blur="$v.name.$touch()"
-              ></v-text-field>
+              ></v-text-field> -->
 
               <v-text-field
                 v-model="email"
@@ -135,8 +144,8 @@
                 @blur="$v.checkbox.$touch()"
               ></v-checkbox>
 
-              <v-btn class="mr-4" :disabled="!validatedFields" v-if="mode == 'signUp'" @click="submit"> create {{validatedFields}} </v-btn> 
-              <v-btn class="mr-4" :class="{'button--disabled' : !validatedFields}" v-else @click="submit"> connection </v-btn>
+              <v-btn class="mr-4" :disabled="!validatedFields" v-if="mode == 'signUp'" @click="submit"> create </v-btn> 
+              <v-btn class="mr-4" :disabled="!validatedFields" v-else @click="submit"> connection </v-btn>
               
             </form>
 
@@ -152,7 +161,7 @@
 <script>
 import commonMixin from "../mixin/commonMixin"
 export default {
-  name: "Accountpage",
+  name: "Loginpage",
   mixins: [commonMixin],
   created: function() {
     
@@ -169,7 +178,7 @@ export default {
     validatedFields: function () {
       /* debugger */
       if (this.mode == 'signUp') {
-        if (this.email != "" && this.prenom != "" && this.nom != "" && this.password != "") {
+        if (this.email != "" /* && this.prenom != "" */ && this.nom != "" && this.password != "") {
           return true;
         } else {
           return false;
@@ -190,11 +199,16 @@ export default {
         this.navigate("homepage");
     },
 
+    goLoginpage: function() {
+        this.navigate("loginpage");
+    },
+
     goAccountpage: function() {
         this.navigate("accountpage");
     },
 
-    testOtherMethod: function() {
+    /* testOtherMethod: function() { */
+    logIn: function() {
        this.axios
         .get("http://localhost:8080/contacts/list")
         .then(function(response) {
@@ -210,7 +224,7 @@ export default {
 
     submit:function(){
       let self = this
-      let user = {"username" : this.name, "password" : this.password}
+      let user = {"username" : this.email, "password" : this.password}
 
       this.axios
         .post("http://localhost:8080/login/", user)
@@ -221,6 +235,7 @@ export default {
             self.navigate(document.targetpage)
           }
 
+          self.goLoginpage();
           /* self.testOtherMethod(); */
 
         })
@@ -245,9 +260,8 @@ export default {
   data () {
 
     return {
-      mode: 'signUp',
+      mode: 'signIn',
       email: '',
-      prenom: '',
       nom: '',
       password: '',
 

@@ -5,7 +5,7 @@
     height="800"
   >
     <v-app-bar
-      color="blue" 
+      color="deep-purple" 
       dark  
     >
       <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
@@ -40,9 +40,19 @@
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
             <v-list-item-title>
+              <v-btn color="primary" @click="goLoginpage">Login</v-btn>
+            </v-list-item-title>
+          </v-list-item>
+
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-account</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>
               <v-btn color="primary" @click="goAccountpage">Account</v-btn>
             </v-list-item-title>
           </v-list-item>
+
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
@@ -65,6 +75,7 @@
         ></v-img>
         
       </v-row>
+
       <v-row>
       <h1 class="display-1">PRESENTATION</h1>
       <p>Les fondateurs souhaitent développer l'activité et vous avez
@@ -82,7 +93,7 @@
     <v-row>
       <div>
        <div>Clique sur le bouton pour aller sur l'écran 2: </div> 
-       <v-btn color="primary" @click="goAccountpage">Go !</v-btn>
+       <v-btn color="primary" @click="goLoginpage">Go !</v-btn>
       </div>
     </v-row>
     </v-container>
@@ -91,7 +102,7 @@
 
   </v-card>
 </template>
-Title
+
 <script>
 import commonMixin from "../mixin/commonMixin"
 export default {
@@ -116,8 +127,8 @@ export default {
         this.navigate("homepage");
     },
 
-    goAccountpage: function() {
-        this.navigate("accountpage");
+    goLoginpage: function() {
+        this.navigate("loginpage");
     },
     
   },
