@@ -4,57 +4,6 @@
     class="mx-auto overflow-hidden"
     height="600"
   >
-    <v-app-bar
-      color="deep-blue" 
-      dark  
-    >
-      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
-      <v-toolbar-title>Pay My Buddy</v-toolbar-title>
-    </v-app-bar>
-
-    <v-navigation-drawer
-      v-model="drawer"
-      absolute
-      temporary
-    >
-      <v-list
-        nav
-        dense
-      >
-        <v-list-item-group
-          v-model="group"
-          active-class="deep-purple--text text--accent-4"
-        >
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-home</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>
-              <v-btn color="primary" @click="goHomepage">Home</v-btn>
-            </v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>
-              <v-btn color="primary" @click="goLoginpage">Login</v-btn>
-            </v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>
-              <v-btn color="primary" @click="goAccountpage">Account</v-btn>
-            </v-list-item-title>
-          </v-list-item>
-
-        </v-list-item-group>
-      </v-list>
-    </v-navigation-drawer>
 
     <v-container fluid>
       <v-row justify="space-around">
@@ -169,6 +118,8 @@ export default {
 
   mounted: function() {
 
+    this.$emit('pagetitle', "Page de login")
+
   },
 
   computed: {   
@@ -207,6 +158,10 @@ export default {
         this.navigate("accountpage");
     },
 
+    goAddContactpage: function() {
+      this.navigate("addcontactpage");
+    },
+
     /* testOtherMethod: function() { */
     logIn: function() {
        this.axios
@@ -230,12 +185,15 @@ export default {
         .post("http://localhost:8080/login/", user)
         .then(function(response) {
           console.log(response)
+          console.log("francois")
           document.token=response.data;
            if (document.targetpage){
             self.navigate(document.targetpage)
+          } else {
+              self.navigate("accountpage")
           }
-
-          self.goLoginpage();
+          
+          /* self.goLoginpage(); */
           /* self.testOtherMethod(); */
 
         })
@@ -245,6 +203,7 @@ export default {
         .finally(function() {
 
         });
+        console.log("coucou")
     },
 
     switchToSignIn: function (){
