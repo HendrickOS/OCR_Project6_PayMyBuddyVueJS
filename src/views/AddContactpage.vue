@@ -21,83 +21,77 @@
       max-width="500px"
     >
       <v-card
-      color="blue-grey darken-1"
-      dark
-      :loading="isUpdating"
-    >
+        color="blue-grey darken-1"
+        dark
+      >
 
-      
-              <v-autocomplete
-                v-model="friends"
-                :disabled="isUpdating"
-                :items="people"
-                filled
-                chips
-                color="blue-grey lighten-2"
-                label="Select"
-                item-text="name"
-                item-value="name"
-                multiple
-              >
-                <template v-slot:selection="data">
-                  <v-chip
-                    v-bind="data.attrs"
-                    :input-value="data.selected"
-                    close
-                    @click="data.select"
-                    @click:close="remove(data.item)"
-                  >
-                    <v-avatar left>
-                      <v-img :src="data.item.avatar"></v-img>
-                    </v-avatar>
-                    {{ data.item.name }}
-                  </v-chip>
-                </template>
-                <template v-slot:item="data">
-                  <template v-if="typeof data.item !== 'object'">
-                    <v-list-item-content v-text="data.item"></v-list-item-content>
-                  </template>
-                  <template v-else>
-                    <v-list-item-avatar>
-                      <img :src="data.item.avatar">
-                    </v-list-item-avatar>
-                    <v-list-item-content>
-                      <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                      <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle>
-                    </v-list-item-content>
-                  </template>
-                </template>
-              </v-autocomplete>
-            
-      <v-divider></v-divider>
-      <v-card-actions>
-
-        <v-col
-          class="text-right"
-          cols="12"
+        <v-autocomplete
+          v-model="friends"
+          :items="people"
+          filled
+          chips
+          color="blue-grey lighten-2"
+          label="Select"
+          item-text="name"
+          item-value="name"
+          multiple
         >
-        
-          <v-btn 
-            color="primary" 
-            @click="dialog = false"
+          <template v-slot:selection="data">
+            <v-chip
+              v-bind="data.attrs"
+              :input-value="data.selected"
+              close
+              @click="data.select"
+              @click:close="remove(data.item)"
+            >
+            <v-avatar left>
+              <v-img :src="data.item.avatar"></v-img>
+            </v-avatar>
+            {{ data.item.name }}
+            </v-chip>
+          </template>
+          <template v-slot:item="data">
+            <template v-if="typeof data.item !== 'object'">
+              <v-list-item-content v-text="data.item"></v-list-item-content>
+            </template>
+            <template v-else>
+              <v-list-item-avatar>
+                <img :src="data.item.avatar">
+              </v-list-item-avatar>
+              <v-list-item-content>
+                <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle>
+              </v-list-item-content>
+            </template>
+          </template>
+        </v-autocomplete>
+              
+        <v-divider></v-divider>
+        <v-card-actions>
+
+          <v-col
+            class="text-right"
+            cols="12"
           >
-            Close
-          </v-btn>
+            <v-btn 
+              color="primary" 
+              @click="dialog = false"
+            >
+              Close
+            </v-btn>
+            <v-btn 
+              color="green"
+              @click="addContact"
+            >
+              Confirm
+            </v-btn>
 
-          <v-btn 
-            color="green"
-            @click="addContact"
-          >
-            Confirm
-          </v-btn>
+          </v-col>
 
-        </v-col>
-
-      </v-card-actions>
-    </v-card>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
-</v-card>
-
+  </v-card>
 </template>
 
 <script>
@@ -138,14 +132,14 @@ export default {
 
     addContact:function(){
       let self = this
-      let user = {"connections" : this.name, 
-                  }
+      let user = {"connections" : this.friends.name }
 
       this.axios
         .post("http://localhost:8080/contacts/", user)
         .then(function(response) {
           console.log(response)
           document.token=response.data;
+          self.friends = response.data;
            if (document.targetpage){
             self.navigate(document.targetpage)
           } else {
@@ -178,9 +172,9 @@ export default {
 
     return{
       autoUpdate: true,
-      friends: ['Sandra Adams', 'Britta Holt'],
+      friends: [],
       isUpdating: false,
-      name: 'Midnight Crew',
+      //name: 'Midnight Crew',
       people: [
         { header: 'Group 1' },
         { name: 'Sandra Adams', group: 'Group 1', avatar: srcs[1] },
@@ -200,13 +194,7 @@ export default {
   
   },
 
-  watch: {
-      isUpdating (val) {
-        if (val) {
-          setTimeout(() => (this.isUpdating = false), 3000)
-        }
-      },
-    },
+  
 
 
 }

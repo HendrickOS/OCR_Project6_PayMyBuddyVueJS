@@ -114,7 +114,6 @@ export default {
           { text: 'Connections', value: 'connections' },
           { text: 'Description', value: 'description' },
           { text: 'Amount', value: 'amount' },
-          { text: 'Action', value: deleteContact },
         ],
         /* desserts: [
           {"id":1,"connections":"Hendrick","description":"JAVA Developer","amount":50},
