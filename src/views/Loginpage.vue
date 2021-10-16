@@ -10,91 +10,33 @@
         
         <v-card
           elevation="4"
-          :loading="loading"
           class="mx-auto my-12"
           max-width="374"
         >
-          <v-tabs
-            v-model="tab"
-            background-color="deep-purple accent-4"
-            centered
-            dark
-            icons-and-text
-          >
-            <v-tabs-slider></v-tabs-slider>
-
-            <v-card-title>
-
-              <v-tab href="#tab-1" @click="switchToSignIn()">
-              Sign In
-              <v-icon>mdi-phone</v-icon>
-              </v-tab>
-
-              <v-tab href="#tab-2" @click="switchToSignUp()">
-              Sign Up 
-              <v-icon>mdi-heart</v-icon>
-              </v-tab>
-
-            </v-card-title>
-          </v-tabs>
-
+        <v-card-title>Login</v-card-title>
           <v-card-text>
 
             <form>
-              <v-text-field v-if="mode == 'signUp'"
-                v-model="nom"
-                :error-messages="nameErrors"
-                :counter="10"
-                label="Username"
-                required
-                @input="$v.name.$touch()"
-                @blur="$v.name.$touch()"
-              ></v-text-field>
-
-              <!-- <v-text-field v-if="mode == 'signUp'"
-                v-model="prenom"
-                :error-messages="nameErrors"
-                :counter="10"
-                label="Firstname"
-                required
-                @input="$v.name.$touch()"
-                @blur="$v.name.$touch()"
-              ></v-text-field> -->
 
               <v-text-field
                 v-model="email"
-                :error-messages="emailErrors"
                 label="E-mail"
                 required
-                @input="$v.email.$touch()"
-                @blur="$v.email.$touch()"
               ></v-text-field>
 
               <v-text-field
                   v-model="password"
-                  :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                  :rules="[rules.required, rules.min]"
-                  :type="show1 ? 'text' : 'password'"
+                  :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="showPassword ? 'text' : 'password'"
                   name="input-10-1"
                   label="Password"
                   hint="At least 8 characters"
                   counter
-                  @click:append="show1 = !show1"
+                  @click:append="showPassword = !showPassword"
                 >
               ></v-text-field>
 
-              <v-checkbox
-                v-if="mode == 'signIn'"
-                v-model="checkbox"
-                :error-messages="checkboxErrors"
-                label="Remember me"
-                required
-                @change="$v.checkbox.$touch()"
-                @blur="$v.checkbox.$touch()"
-              ></v-checkbox>
-
-              <v-btn class="mr-4" :disabled="!validatedFields" v-if="mode == 'signUp'" @click="create"> create </v-btn> 
-              <v-btn class="mr-4" :disabled="!validatedFields" v-else @click="submit"> connection </v-btn>
+              <v-btn class="mr-4" :disabled="!validatedFields" @click="submit"> connection </v-btn>
               
             </form>
 
@@ -189,7 +131,7 @@ export default {
         .post("http://localhost:8080/login/", user)
         .then(function(response) {
           console.log(response)
-          console.log("francois")
+          /* console.log("francois") */
           document.token=response.data;
            if (document.targetpage){
             self.navigate(document.targetpage)
@@ -207,15 +149,7 @@ export default {
         .finally(function() {
 
         });
-        console.log("coucou")
-    },
-
-    switchToSignIn: function (){
-      this.mode = 'signIn' ;
-    },
-
-    switchToSignUp: function (){
-      this.mode = 'signUp' ;
+        /* console.log("coucou") */
     },
 
   },
@@ -224,16 +158,15 @@ export default {
 
     return {
       mode: 'signIn',
-      email: '',
+      email: 'springuser',
       nom: '',
-      password: '',
+      password: 'user123',
 
       drawer: false,
       group: null,
       tab: null,
 
-      show1: false,
-      password: 'Password',
+      showPassword: false,
       name: 'Name',
       rules: {
         required: value => !!value || 'Required.',

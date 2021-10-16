@@ -13,6 +13,9 @@ import AddContactpage from "./views/AddContactpage.vue";
 
 import axios from "axios";
 import VueAxios from "vue-axios";
+
+import './axios'
+
 Vue.use(VueAxios, axios);
 
 axios.interceptors.request.use(

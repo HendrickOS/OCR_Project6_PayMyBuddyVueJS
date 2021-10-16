@@ -65,9 +65,9 @@
       </v-list>
     </v-navigation-drawer>
 
-      <v-content class="ma-3">
+      <v-main class="ma-3">
         <router-view @pagetitle='updatetitle'></router-view>
-      </v-content>
+      </v-main>
     </v-app>
 </template>
 

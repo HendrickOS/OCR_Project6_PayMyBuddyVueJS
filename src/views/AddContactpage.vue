@@ -132,7 +132,7 @@ export default {
 
     addContact:function(){
       let self = this
-      let user = {"connections" : this.friends.name }
+      let user = {"connections" : this.name }
 
       this.axios
         .post("http://localhost:8080/contacts/", user)
@@ -171,9 +171,7 @@ export default {
       }
 
     return{
-      autoUpdate: true,
       friends: [],
-      isUpdating: false,
       //name: 'Midnight Crew',
       people: [
         { header: 'Group 1' },
