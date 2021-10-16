@@ -61,6 +61,9 @@ export default {
   },
 
   mounted: function() {
+
+    this.$emit('pagetitle', "Page Home")
+
   },
 
 

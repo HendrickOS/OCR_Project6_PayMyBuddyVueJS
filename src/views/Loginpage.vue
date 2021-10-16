@@ -45,7 +45,7 @@
                 v-model="nom"
                 :error-messages="nameErrors"
                 :counter="10"
-                label="UserName"
+                label="Username"
                 required
                 @input="$v.name.$touch()"
                 @blur="$v.name.$touch()"
@@ -93,7 +93,7 @@
                 @blur="$v.checkbox.$touch()"
               ></v-checkbox>
 
-              <v-btn class="mr-4" :disabled="!validatedFields" v-if="mode == 'signUp'" @click="submit"> create </v-btn> 
+              <v-btn class="mr-4" :disabled="!validatedFields" v-if="mode == 'signUp'" @click="create"> create </v-btn> 
               <v-btn class="mr-4" :disabled="!validatedFields" v-else @click="submit"> connection </v-btn>
               
             </form>
@@ -177,6 +177,10 @@ export default {
         });
     },
 
+    create:function(){
+      
+    },
+
     submit:function(){
       let self = this
       let user = {"username" : this.email, "password" : this.password}
@@ -257,8 +261,7 @@ export default {
 }
 
 .justify-space-around{
-  /* background: linear-gradient(green, yellow, rgba(0, 174, 255, 0.849)); */
-  /* background: url(https://hdfondsdecran.com/image/201609/69/motif-givre-merveilleux.jpg); */
+  
 }
 
 </style>
