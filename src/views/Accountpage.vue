@@ -1,133 +1,102 @@
 <template>
   <div>
     <v-dialog
-            v-model="dialog"
-            max-width="500px"
+      v-model="dialog"
+      max-width="500px"
+    >
+      <v-card
+        color="grey darken-3"
+        dark
+      >
+
+        <v-form
+          ref="form"
+          v-model="valid"
+          lazy-validation
+        >
+          <v-text-field
+            v-model="username"
+            :counter="10"
+            :rules="usernameRules"
+            label="Username"
+            required
+          ></v-text-field>
+
+          <v-text-field
+            v-model="description"
+            :counter="10"
+            :rules="descriptionRules"
+            label="Description"
+            required
+          ></v-text-field>
+
+          <v-select
+            v-model="amount"
+            :items="amounts"
+            :rules="[v => !!v || 'Amount is required']"
+            label="Amount"
+            required
+          ></v-select>
+
+          <v-btn
+            :disabled="!valid"
+            color="success"
+            class="mr-4"
+            @click="validate"
           >
-            <v-card
-              color="blue-grey darken-1"
-              dark
-            >
+            Validate
+          </v-btn>
 
-              <v-autocomplete
-                v-model="friends"
-                :items="people"
-                filled
-                chips
-                color="blue-grey lighten-2"
-                label="Select"
-                item-text="name"
-                item-value="name"
-                multiple
-              >
-                <template v-slot:selection="data">
-                  <v-chip
-                    v-bind="data.attrs"
-                    :input-value="data.selected"
-                    close
-                    @click="data.select"
-                    @click:close="remove(data.item)"
-                  >
-                  <v-avatar left>
-                    <v-img :src="data.item.avatar"></v-img>
-                  </v-avatar>
-                  {{ data.item.name }}
-                  </v-chip>
-                </template>
+          <v-btn
+            color="error"
+            class="mr-4"
+            @click="reset"
+          >
+            Reset Form
+          </v-btn>
 
-                <template v-slot:item="data">
-                  <template v-if="typeof data.item !== 'object'">
-                    <v-list-item-content v-text="data.item"></v-list-item-content>
-                  </template>
-                  <template v-else>
-                    <v-list-item-avatar>
-                      <img :src="data.item.avatar">
-                    </v-list-item-avatar>
-                    <v-list-item-content>
-                      <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                      <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle>
-                    </v-list-item-content>
-                  </template>
-                </template>
-                
-              </v-autocomplete>
-                    
-              <v-divider></v-divider>
-              <v-card-actions>
+          <v-btn
+            color="blue darken-4"
+            @click="dialog = false"
+          >
+            Close
+          </v-btn>
+        </v-form>
 
-                <v-col
-                  class="text-right"
-                  cols="12"
-                >
-                  <v-btn 
-                    color="primary" 
-                    @click="dialog = false"
-                  >
-                    Close
-                  </v-btn>
-                  <v-btn 
-                    color="green"
-                    @click="addContact"
-                  >
-                    Confirm
-                  </v-btn>
-
-                </v-col>
-
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+      </v-card>
+    </v-dialog>
   
-  <v-card>
-
-    <v-card-text>
+    <v-card>
+      <v-card-text>
         <v-data-table
           :headers="headers"
           :items="accounts"
           :items-per-page="5"
           class="elevation-1"
         ></v-data-table>
-    </v-card-text>
+      </v-card-text>
 
-    <v-card-actions
-      class="justify-end pr-5"
+      <v-card-actions
+        class="justify-end pr-5"
       >
-      <v-btn
+        <v-btn
           fab
           small
           color="red accent-2"
           dark
           @click="dialog = !dialog"
-          >
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-    </v-card-actions>
-
-    <v-container fluid>
-      <v-row justify="space-around">
-        
-        
-
-        <!-- <v-list-item
-          v-for="account in accounts"
-          :key="account.connection"
         >
-        <v-list-item-icon>
-          <v-icon
-            v-if="item.icon"
-            color="pink"
-            @click="deleteContact"
-          >
-            mdi-minus
-          </v-icon>
-        </v-list-item-icon>
-        </v-list-item> -->
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </v-card-actions>
 
-    </v-row>
-    </v-container>
+      <v-container fluid>
+        <v-row justify="space-around">
 
-  </v-card>
-</div>
+        </v-row>
+      </v-container>
+    </v-card>
+  </div>
 </template>
 
 <script>
@@ -196,25 +165,20 @@ export default {
         });
     },
 
-    remove (item) {
-      const index = this.friends.indexOf(item.name)
-      if (index >= 0) this.friends.splice(index, 1)
-    },
-
-    addContact:function(){
+    validate () {
       let self = this
-      let user = {"connections" : this.friends }
+      let user = {
+        "username" : this.username,
+        "description" : this.description,
+        "amount" : this.amount
+      }
 
       this.axios
         .post("http://localhost:8080/contacts/", user)
         .then(function(response) {
           console.log(response)
-          self.friends = response.data;
-           if (document.targetpage){
-            self.navigate(document.targetpage)
-          } else {
-              self.navigate("accountpage")
-          }
+          /* self.newContact = response.data; */
+          self.accoutns = response.data;
         })
         .catch(function(error) {
           console.log(error)
@@ -224,41 +188,17 @@ export default {
         });
     },
 
-    deleteContact:function(){
-      let self = this
-      let user = {"id" : this.id }
-
-      this.axios
-        .delete("http://localhost:8080/contacts/", user)
-        .then(function(response) {
-          console.log(response)
-          self.user=response.data;
-           if (document.targetpage){
-            self.navigate(document.targetpage)
-          } else {
-              self.navigate("accountpage")
-          }
-        })
-        .catch(function(error) {
-          console.log(error)
-        })
-        .finally(function() {
-
-        });
+    reset () {
+      this.$refs.form.reset()
     },
 
+    /* close () {
+      this.$refs.form.resetValidation()
+    }, */
+    
   },
 
-
   data () {
-
-    const srcs = {
-        1: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-        2: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-        3: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-        4: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
-        5: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
-      }
 
     return {
 
@@ -271,28 +211,34 @@ export default {
               sortable: false,
               value: 'id',
             },
-            { text: 'Connections', value: 'connections' },
+            { text: 'Username', value: 'username' },
             { text: 'Description', value: 'description' },
             { text: 'Amount', value: 'amount' },
           ],
 
-      friends: [],
-      //name: 'Midnight Crew',
-      people: [
-        { header: 'Group 1' },
-        { name: 'Sandra Adams', group: 'Group 1', avatar: srcs[1], icon: true },
-        { name: 'Ali Connors', group: 'Group 1', avatar: srcs[2] },
-        { name: 'Trevor Hansen', group: 'Group 1', avatar: srcs[3] },
-        { name: 'Tucker Smith', group: 'Group 1', avatar: srcs[2] },
-        { divider: true },
-        { header: 'Group 2' },
-        { name: 'Britta Holt', group: 'Group 2', avatar: srcs[4] },
-        { name: 'Jane Smith ', group: 'Group 2', avatar: srcs[5] },
-        { name: 'John Smith', group: 'Group 2', avatar: srcs[1] },
-        { name: 'Sandra Williams', group: 'Group 2', avatar: srcs[3] },
-      ],
-
       dialog: false,
+
+      newContact: [],
+      valid: true,
+      username: '',
+      description: '',
+      amount: '',
+      usernameRules: [
+        v => !!v || 'Username is required',
+        v => (v && v.length <= 10) || 'Username must be less than 10 characters',
+      ],
+      descriptionRules: [
+        v => !!v || 'Description is required',
+        v => (v && v.length <= 10) || 'Description must be valid',
+        /* v => /.+@.+\..+/.test(v) || 'Email must be valid', */
+      ],
+      select: null,
+      amounts: [
+        '5',
+        '10',
+        '15',
+        '20',
+      ],
       
     };
   },  
