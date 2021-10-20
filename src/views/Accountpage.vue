@@ -177,8 +177,7 @@ export default {
         .post("http://localhost:8080/contacts/", user)
         .then(function(response) {
           console.log(response)
-          /* self.newContact = response.data; */
-          self.accoutns = response.data;
+          self.accounts = response.data
         })
         .catch(function(error) {
           console.log(error)
