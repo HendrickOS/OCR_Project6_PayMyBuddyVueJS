@@ -1,0 +1,81 @@
+<v-dialog
+      v-model="dialog"
+      max-width="500px"
+    >
+    <v-card
+        color="grey darken-3"
+        dark
+    >
+        <v-form
+          ref="form"
+          v-model="valid"
+          lazy-validation
+        >
+          <v-text-field
+            v-model="crediterCompte"
+            label="Montant à créditer"
+          ></v-text-field>
+
+          <v-btn
+            :disabled="!valid"
+            color="success"
+            class="mr-4"
+            @click="crediter"
+          >
+            Crediter
+          </v-btn>
+
+          <v-btn
+            color="blue darken-4"
+            @click="dialog = false"
+          >
+            Close
+          </v-btn>
+
+        </v-form>
+      </v-card>
+    </v-dialog>
+
+
+
+
+
+<v-text>
+          Solde : {{solde}}  
+          <v-btn
+          fab
+          small
+          color="green accent-4"
+          dark
+          @click="dialog = !dialog"
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+        </v-text>
+
+
+methods : {
+
+    crediter () {
+      /* solde = this.solde + crediterCompte ; */
+      let self = this
+      let transaction = {
+        "montant" : this.montant,
+        /* "user" : this.user, */
+      }
+
+      this.axios
+        .post("http://localhost:8080/transaction/supplying", transaction)
+        .then(function(response) {
+          console.log(response)
+          /* self.accounts = response.data */
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+        .finally(function() {
+
+        });
+    },
+
+  },

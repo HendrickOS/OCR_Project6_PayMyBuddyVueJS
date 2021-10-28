@@ -9,7 +9,7 @@ Vue.config.productionTip = false;
 import Homepage from "./views/Homepage.vue";
 import Accountpage from "./views/Accountpage.vue";
 import Loginpage from "./views/Loginpage.vue";
-import AddContactpage from "./views/AddContactpage.vue";
+import Transactionpage from "./views/Transactionpage.vue";
 
 import axios from "axios";
 import VueAxios from "vue-axios";
@@ -49,9 +49,9 @@ const router = new VueRouter({
             component: Loginpage,
         },
         {
-            path: "/addcontactpage",
-            name: "addcontactpage",
-            component: AddContactpage,
+            path: "/transactionpage",
+            name: "transactionpage",
+            component: Transactionpage,
         },
         {
             path: "/",

@@ -100,8 +100,8 @@ export default {
         this.navigate("accountpage");
     },
 
-    goAddContactpage: function() {
-      this.navigate("addcontactpage");
+    goTransactionpage: function() {
+      this.navigate("transactionpage");
     },
 
     /* testOtherMethod: function() { */

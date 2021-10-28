@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <v-dialog
       v-model="dialog"
       max-width="500px"
@@ -8,29 +9,34 @@
         color="grey darken-3"
         dark
       >
+        <v-card-text class="pa-5">
 
-        <v-form
-          ref="form"
-          v-model="valid"
-          lazy-validation
-        >
-          <v-text-field
-            v-model="username"
-            :counter="10"
-            :rules="usernameRules"
-            label="Username"
-            required
-          ></v-text-field>
+          <v-form
+            ref="form"
+            v-model="valid"
+            lazy-validation
+          >
+            <v-select
+              v-model="contact"
+              label="Contact"
+              :items="contacts"
+            ></v-select>
 
-          <v-text-field
-            v-model="description"
-            :counter="10"
-            :rules="descriptionRules"
-            label="Description"
-            required
-          ></v-text-field>
+            <v-select
+              v-model="montant"
+              :items="montants"
+              :rules="[v => !!v || 'Amount is required']"
+              label="Montant"
+              required
+            ></v-select>
 
-          <v-btn
+          </v-form>
+
+        </v-card-text>
+
+        <v-card-actions>
+
+        <v-btn
             :disabled="!valid"
             color="success"
             class="mr-4"
@@ -53,7 +59,8 @@
           >
             Close
           </v-btn>
-        </v-form>
+
+          </v-card-actions>
 
       </v-card>
     </v-dialog>
@@ -62,7 +69,7 @@
       <v-card-text>
         <v-data-table
           :headers="headers"
-          :items="accounts"
+          :items="transactions"
           :items-per-page="5"
           class="elevation-1"
         ></v-data-table>
@@ -94,7 +101,7 @@
 <script>
 import commonMixin from "../mixin/commonMixin"
 export default {
-  name: "Accountpage",
+  name: "Transactionpage",
   mixins: [commonMixin],
   created: function() {
     
@@ -102,14 +109,14 @@ export default {
 
   mounted: function() {
 
-    this.$emit('pagetitle', "Page account")
+    this.$emit('pagetitle', "Page transaction")
 
     if (!this.token) {
-      document.targetpage="accountpage";
+      document.targetpage="transactionpage";
       this.navigate("loginpage");
     }
     else{
-      this.loadAccounts()
+      this.loadTransactions()
     }
 
 
@@ -138,16 +145,16 @@ export default {
     },
 
     goTransactionpage: function() {
-      this.navigate("transactionpage");
+      this.navigate("transactioncontactpage");
     },
     
-    loadAccounts: function() {
+    loadTransactions: function() {
       let self= this
        this.axios
-        .get("http://localhost:8080/contacts/list")
+        .get("http://localhost:8080/transactions/list")
         .then(function(response) {
           console.log(response)
-          self.accounts = response.data
+          self.transactions = response.data
         })
         .catch(function(error) {
           console.log(error)
@@ -159,16 +166,16 @@ export default {
 
     validate () {
       let self = this
-      let user = {
-        "username" : this.username,
-        "description" : this.description,
+      let transaction = {
+        "montant" : this.montant,
+        "contactEntity" : {"id" : this.contact}
       }
 
       this.axios
-        .post("http://localhost:8080/contacts/", user)
+        .post("http://localhost:8080/transactions/transfert", transaction)
         .then(function(response) {
           console.log(response)
-          self.accounts = response.data
+          /* self.accounts = response.data */
         })
         .catch(function(error) {
           console.log(error)
@@ -192,7 +199,11 @@ export default {
 
     return {
 
-      accounts: [],
+      contact: null,
+
+      contacts: [{text:'contact1', value:'id1'}],
+
+      transactions: [],
 
       headers: [
             {
@@ -201,26 +212,22 @@ export default {
               sortable: false,
               value: 'id',
             },
-            { text: 'Username', value: 'username' },
-            { text: 'Description', value: 'description' },
+            { text: 'Contact', value: 'contactEntity' },
+            { text: 'Montant', value: 'montant' },
           ],
 
       dialog: false,
 
-      newContact: [],
       valid: true,
-      username: '',
-      description: '',
-      usernameRules: [
-        v => !!v || 'Username is required',
-        v => (v && v.length <= 10) || 'Username must be less than 10 characters',
+      montant: 0,
+      
+      select: null,
+      montants: [
+        '5',
+        '10',
+        '15',
+        '20',
       ],
-      descriptionRules: [
-        v => !!v || 'Description is required',
-        v => (v && v.length <= 10) || 'Description must be valid',
-        /* v => /.+@.+\..+/.test(v) || 'Email must be valid', */
-      ],
-      /* select: null, */
       
     };
   },  

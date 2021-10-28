@@ -57,15 +57,16 @@
               <v-icon>mdi-plus</v-icon>
             </v-list-item-icon>
             <v-list-item-title>
-              <v-btn color="primary" @click="goAddContactpage">Add Contact</v-btn>
+              <v-btn color="primary" @click="goTransactionpage">Transaction</v-btn>
             </v-list-item-title>
           </v-list-item>
 
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
-
+    
       <v-main class="ma-3">
+
         <router-view @pagetitle='updatetitle'></router-view>
       </v-main>
     </v-app>
@@ -77,8 +78,6 @@ import commonMixin from "./mixin/commonMixin"
 export default {
   name: "App",
   mixins: [commonMixin],
-  data: () => ({
-  }),
 
   watch: {
     
@@ -100,20 +99,9 @@ export default {
    
   },
 
-  data () {
+  methods : {
 
-    return{
-
-      drawer: false,
-      group: null,
-      pagetitle: '',
-    
-    };
-  },
-
-  methods: {
-
-    goHomepage: function() {
+     goHomepage: function() {
         this.navigate("homepage");
     },
 
@@ -125,18 +113,31 @@ export default {
         this.navigate("loginpage");
     },
 
-    goAddContactpage: function() {
-      this.navigate("addcontactpage");
+    goTransactionpage: function() {
+      this.navigate("transactionpage");
     },
 
     updatetitle: function(title){
       this.pagetitle = title
     }
-  }
+
+  },
+
+
+  data () {
+
+    return{
+
+      drawer: false,
+      group: null,
+      pagetitle: '',
+
+      dialog : false,
+    
+    };
+  },
 
 };
-
-
 
 </script>
 

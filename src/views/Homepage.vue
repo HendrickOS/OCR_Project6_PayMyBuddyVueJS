@@ -82,8 +82,8 @@ export default {
         this.navigate("loginpage");
     },
     
-    goAddContactpage: function() {
-      this.navigate("addcontactpage");
+    goTransactionpage: function() {
+      this.navigate("transactionpage");
     },
     
   },
