@@ -1,5 +1,5 @@
-<v-dialog
-      v-model="dialog"
+ <v-dialog
+      v-model="supply"
       max-width="500px"
     >
     <v-card
@@ -8,7 +8,7 @@
     >
         <v-form
           ref="form"
-          v-model="valid"
+          v-model="confirm"
           lazy-validation
         >
           <v-text-field
@@ -17,7 +17,7 @@
           ></v-text-field>
 
           <v-btn
-            :disabled="!valid"
+            :disabled="!confirm"
             color="success"
             class="mr-4"
             @click="crediter"
@@ -27,7 +27,7 @@
 
           <v-btn
             color="blue darken-4"
-            @click="dialog = false"
+            @click="confirm = false"
           >
             Close
           </v-btn>
@@ -39,19 +39,33 @@
 
 
 
-
-<v-text>
-          Solde : {{solde}}  
+<v-card-actions
+      class="justify-end pr-15"
+    >
+    <v-text>
+          
+        Solde : {{solde}} €
+        <!-- <v-text-field
+            label="Solde actuel"
+            placeholder="Dense & Rounded"
+            filled
+            rounded
+            dense
+          ></v-text-field> -->
           <v-btn
           fab
           small
           color="green accent-4"
           dark
-          @click="dialog = !dialog"
+          @click="supply = !supply"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
-        </v-text>
+    </v-text>
+
+    </v-card-actions>
+
+
 
 
 methods : {
@@ -59,13 +73,13 @@ methods : {
     crediter () {
       /* solde = this.solde + crediterCompte ; */
       let self = this
-      let transaction = {
+      let approvisionner = {
         "montant" : this.montant,
         /* "user" : this.user, */
       }
 
       this.axios
-        .post("http://localhost:8080/transaction/supplying", transaction)
+        .post("http://localhost:8080/transaction/supplying", approvisionner)
         .then(function(response) {
           console.log(response)
           /* self.accounts = response.data */

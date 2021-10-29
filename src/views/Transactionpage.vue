@@ -64,6 +64,59 @@
 
       </v-card>
     </v-dialog>
+
+
+
+    <v-dialog
+      v-model="supply"
+      max-width="500px"
+    >
+    <v-card
+        color="grey darken-3"
+        dark
+    >
+
+    <v-card-text class="pa-5">
+        <v-form
+          ref="form"
+          v-model="confirm"
+          lazy-validation
+        >
+          <v-text-field
+            v-model="crediterCompte"
+            label="Montant à créditer"
+          ></v-text-field>
+          </v-form>
+          </v-card-text>
+
+          <v-card-actions>
+
+          <v-btn
+            :disabled="!confirm"
+            color="success"
+            class="mr-4"
+            @click="crediter"
+          >
+            Crediter
+          </v-btn>
+
+          <v-btn
+            color="blue darken-4"
+            @click="supply = false"
+          >
+            Close
+          </v-btn>
+          </v-card-actions>
+
+      </v-card>
+    </v-dialog>
+
+   
+
+
+
+   
+
   
     <v-card>
       <v-card-text>
@@ -76,7 +129,33 @@
       </v-card-text>
 
       <v-card-actions
-        class="justify-end pr-5"
+      >
+
+
+      <div
+        class="justify-start pr-5"
+      >
+          
+        Solde : {{solde}} €
+        <!-- <v-text-field
+            label="Solde actuel"
+            placeholder="Dense & Rounded"
+            filled
+            rounded
+            dense
+          ></v-text-field> -->
+          <v-btn
+          fab
+          small
+          color="green accent-4"
+          dark
+          @click="supply = !supply"
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+    </div>
+    
+      <div
       >
         <v-btn
           fab
@@ -87,7 +166,12 @@
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
+      </div>
+
       </v-card-actions>
+
+
+      
 
       <v-container fluid>
         <v-row justify="space-around">
@@ -168,7 +252,8 @@ export default {
       let self = this
       let transaction = {
         "montant" : this.montant,
-        "contactEntity" : {"id" : this.contact}
+        /* "contactEntity" : {"id" : this.contact} */
+        "contactEntity" : this.contact,
       }
 
       this.axios
@@ -192,6 +277,26 @@ export default {
     /* close () {
       this.$refs.form.resetValidation()
     }, */
+
+    crediter () {
+      /* solde = this.solde + crediterCompte ; */
+      let self = this
+      let approvisionner = {
+        "montant" : this.crediterCompte,
+      }
+
+      this.axios
+        .post("http://localhost:8080/transaction/supplying", approvisionner)
+        .then(function(response) {
+          console.log(response)
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+        .finally(function() {
+
+        });
+    },
     
   },
 
@@ -217,9 +322,12 @@ export default {
           ],
 
       dialog: false,
+      supply: false,
 
       valid: true,
+
       montant: 0,
+      confirm: true,
       
       select: null,
       montants: [
@@ -228,6 +336,8 @@ export default {
         '15',
         '20',
       ],
+
+      solde: 0,
       
     };
   },  

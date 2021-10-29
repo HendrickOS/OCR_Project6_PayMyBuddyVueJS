@@ -9,6 +9,8 @@
         dark
       >
 
+        <v-card-text class="pa-5">
+
         <v-form
           ref="form"
           v-model="valid"
@@ -29,6 +31,21 @@
             label="Description"
             required
           ></v-text-field>
+
+          <v-select
+            v-model="solde"
+            :items="soldes"
+            label="Solde"
+            required
+            >
+          </v-select>
+
+          
+        </v-form>
+
+        </v-card-text>
+
+        <v-card-actions>
 
           <v-btn
             :disabled="!valid"
@@ -53,9 +70,13 @@
           >
             Close
           </v-btn>
-        </v-form>
+
+        </v-card-actions>
 
       </v-card>
+
+    
+
     </v-dialog>
   
     <v-card>
@@ -159,16 +180,18 @@ export default {
 
     validate () {
       let self = this
-      let user = {
+      let contact = {
         "username" : this.username,
         "description" : this.description,
+        "solde" : this.solde,
       }
 
       this.axios
-        .post("http://localhost:8080/contacts/", user)
+        .post("http://localhost:8080/contacts/", contact)
         .then(function(response) {
           console.log(response)
           self.accounts = response.data
+          self.dialog = false
         })
         .catch(function(error) {
           console.log(error)
@@ -203,14 +226,22 @@ export default {
             },
             { text: 'Username', value: 'username' },
             { text: 'Description', value: 'description' },
+            { text: 'Solde', value: 'solde' },
           ],
 
       dialog: false,
 
-      newContact: [],
       valid: true,
       username: '',
       description: '',
+      /* solde: 0, */
+      soldes: [
+        '5',
+        '10',
+        '15',
+        '20',
+      ],
+
       usernameRules: [
         v => !!v || 'Username is required',
         v => (v && v.length <= 10) || 'Username must be less than 10 characters',

@@ -157,7 +157,7 @@ export default {
   data () {
 
     return {
-      mode: 'signIn',
+      /* mode: 'signIn', */
       email: 'springuser',
       nom: '',
       password: 'user123',
