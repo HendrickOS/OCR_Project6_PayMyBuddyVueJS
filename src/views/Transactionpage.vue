@@ -20,6 +20,8 @@
               v-model="contact"
               label="Contact"
               :items="contacts"
+              item-text="username"
+              item-value="id"
             ></v-select>
 
             <v-select
@@ -40,9 +42,9 @@
             :disabled="!valid"
             color="success"
             class="mr-4"
-            @click="validate"
+            @click="transferer"
           >
-            Validate
+            Valider
           </v-btn>
 
           <v-btn
@@ -125,7 +127,16 @@
           :items="transactions"
           :items-per-page="5"
           class="elevation-1"
-        ></v-data-table>
+        >
+         <template v-slot:item.contactEntity="{ item }">
+        {{ item.contactEntity.username }}
+    </template>
+    <template v-slot:item.actions="{ item }">
+      <v-btn
+      @click="trace(item)"
+      >Coucou</v-btn>
+    </template>
+        </v-data-table>
       </v-card-text>
 
       <v-card-actions
@@ -200,10 +211,12 @@ export default {
       this.navigate("loginpage");
     }
     else{
-      this.loadTransactions()
+      this.loadTransactions(),
+      this.loadContacts()
     }
 
 
+  
   },
 
   computed: {   
@@ -248,19 +261,35 @@ export default {
         });
     },
 
-    validate () {
+    loadContacts: function() {
+      let self= this
+       this.axios
+        .get("http://localhost:8080/contacts/list")
+        .then(function(response) {
+          console.log(response)
+          self.contacts = response.data
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+        .finally(function() {
+
+        });
+    },
+
+    transferer () {
       let self = this
       let transaction = {
         "montant" : this.montant,
         /* "contactEntity" : {"id" : this.contact} */
-        "contactEntity" : this.contact,
+        "contactEntity" : {"id" : this.contact},
       }
 
       this.axios
         .post("http://localhost:8080/transactions/transfert", transaction)
         .then(function(response) {
           console.log(response)
-          /* self.accounts = response.data */
+          self.dialog = false
         })
         .catch(function(error) {
           console.log(error)
@@ -272,6 +301,10 @@ export default {
 
     reset () {
       this.$refs.form.reset()
+    },
+
+    trace(transaction){
+      console.log(transaction)
     },
 
     /* close () {
@@ -289,6 +322,7 @@ export default {
         .post("http://localhost:8080/transaction/supplying", approvisionner)
         .then(function(response) {
           console.log(response)
+          self.supply = false
         })
         .catch(function(error) {
           console.log(error)
@@ -306,7 +340,7 @@ export default {
 
       contact: null,
 
-      contacts: [{text:'contact1', value:'id1'}],
+      contacts: [],
 
       transactions: [],
 
@@ -319,6 +353,7 @@ export default {
             },
             { text: 'Contact', value: 'contactEntity' },
             { text: 'Montant', value: 'montant' },
+            { text: 'Actions', value: 'actions' },
           ],
 
       dialog: false,
