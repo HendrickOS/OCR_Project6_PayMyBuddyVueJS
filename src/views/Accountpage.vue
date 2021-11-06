@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- Dialogue Add Contact -->
     <v-dialog
       v-model="dialog"
       max-width="500px"
@@ -11,37 +12,37 @@
 
         <v-card-text class="pa-5">
 
-        <v-form
-          ref="form"
-          v-model="valid"
-          lazy-validation
-        >
-          <v-text-field
-            v-model="username"
-            :counter="10"
-            :rules="usernameRules"
-            label="Username"
-            required
-          ></v-text-field>
+          <v-form
+            ref="form"
+            v-model="valid"
+            lazy-validation
+          >
+            <v-text-field
+              v-model="username"
+              :counter="10"
+              :rules="usernameRules"
+              label="Username"
+              required
+            ></v-text-field>
 
-          <v-text-field
-            v-model="description"
-            :counter="10"
-            :rules="descriptionRules"
-            label="Description"
-            required
-          ></v-text-field>
+            <v-text-field
+              v-model="description"
+              :counter="10"
+              :rules="descriptionRules"
+              label="Description"
+              required
+            ></v-text-field>
 
-          <v-select
-            v-model="solde"
-            :items="soldes"
-            label="Solde"
-            required
-            >
-          </v-select>
+            <v-select
+              v-model="solde"
+              :items="soldes"
+              label="Solde"
+              required
+              >
+            </v-select>
 
-          
-        </v-form>
+            
+          </v-form>
 
         </v-card-text>
 
@@ -74,10 +75,116 @@
         </v-card-actions>
 
       </v-card>
+    </v-dialog>
+    <!-- Fin Dialogue Add Contact -->
 
     
-
+    <!-- Dialogue Delete -->
+    <v-row justify="center">
+    <v-dialog
+      v-model="deleteDialog"
+      persistent
+      max-width="290"
+    >
+      <v-card>
+        <v-card-title class="text-h5">
+          Êtes-vous sûr ?
+        </v-card-title>
+        <v-card-text>
+          Ce contact sera définitivement supprimé
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="red darken-1"
+            text
+            @click="deleteDialog = false"
+          >
+            Refuser
+          </v-btn>
+          <v-btn
+            color="green darken-1"
+            text
+            @click="deleteAction"
+          >
+            Confirmer
+          </v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
+  </v-row>
+    <!-- Fin Dialogue Delete -->
+
+    <!-- Dialogue Update -->
+    <v-row justify="center">
+    <v-dialog
+      v-model="editDialog"
+      persistent
+      max-width="600px"
+    >
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">User Profile</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col
+                cols="12"
+                sm="6"
+                md="4"
+              >
+                <v-text-field
+                  v-model="updateUsername"
+                  label="Username"
+                ></v-text-field>
+              </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+                md="4"
+              >
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="updateDescription"
+                  label="Description"
+                ></v-text-field>
+              </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+              >
+                <v-select
+                  v-model="upadateSolde"
+                  :items="amounts"
+                  label="Solde"
+                ></v-select>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="editDialog = false"
+          >
+            Close
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="editAction"
+          >
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
+    <!-- Fin Dialogue Update -->
   
     <v-card>
       <v-card-text>
@@ -86,7 +193,30 @@
           :items="accounts"
           :items-per-page="5"
           class="elevation-1"
-        ></v-data-table>
+        >
+          <template v-slot:item.remove="{ item }">
+            <v-btn
+              fab
+              small
+              color="error"
+              @click="selectForDelete(item)"
+            >
+            <v-icon>mdi-minus</v-icon>
+            </v-btn>
+          </template>
+
+          <template v-slot:item.edit="{ item }">
+            <v-btn
+              fab
+              small
+              color="success"
+              @click="edit(item)"
+            >
+            <v-icon>mdi-cached</v-icon>
+            </v-btn>
+          </template>
+        
+        </v-data-table>
       </v-card-text>
 
       <v-card-actions
@@ -114,6 +244,7 @@
 
 <script>
 import commonMixin from "../mixin/commonMixin"
+/* import mdiDelete from '@mdi/js' */
 export default {
   name: "Accountpage",
   mixins: [commonMixin],
@@ -205,6 +336,64 @@ export default {
       this.$refs.form.reset()
     },
 
+    edit(item){
+      this.updateId = item.id
+      this.updateUsername = item.username
+      this.updateDescription = item.description
+      this.editDialog = true
+    },
+
+    editAction () {
+      let self = this
+      let contact = {
+        "username" : this.updateUsername,
+        "description" : this.updateDescription,
+        "solde" : this.updateSolde,
+      }
+
+      this.axios
+        .put("http://localhost:8080/contacts/", contact)
+        .then(function(response) {
+          console.log(response)
+          self.accounts = response.data
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+        .finally(function() {
+          self.editDialog = false
+        });
+    },
+
+    selectForDelete(item){
+      this.selectIdForDelete = item.id
+      this.deleteDialog = true
+    },
+
+    deleteAction () {
+      let self = this
+      let contact = {
+        "id" : this.selectIdForDelete
+      }
+
+      this.axios
+        .delete("http://localhost:8080/contacts/", {
+          data: {
+            "id": this.selectIdForDelete
+          }
+        })
+        .then(function(response) {
+          console.log(response)
+          self.accounts = response.data
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+        .finally(function() {
+          self.deleteDialog = false
+        });
+    },
+
     /* close () {
       this.$refs.form.resetValidation()
     }, */
@@ -227,13 +416,21 @@ export default {
             { text: 'Username', value: 'username' },
             { text: 'Description', value: 'description' },
             { text: 'Solde', value: 'solde' },
+            { text: 'Update', value: 'edit' },
+            { text: 'Delete', value: 'remove' },
           ],
 
       dialog: false,
+      deleteDialog: false,
+      editDialog: false,
+
+      selectIdForDelete: null,
 
       valid: true,
       username: '',
       description: '',
+      updateUsername: '',
+      updateDescription:'',
       /* solde: 0, */
       soldes: [
         '5',

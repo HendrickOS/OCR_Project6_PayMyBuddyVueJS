@@ -128,14 +128,14 @@
           :items-per-page="5"
           class="elevation-1"
         >
-         <template v-slot:item.contactEntity="{ item }">
-        {{ item.contactEntity.username }}
-    </template>
-    <template v-slot:item.actions="{ item }">
-      <v-btn
-      @click="trace(item)"
-      >Coucou</v-btn>
-    </template>
+          <template v-slot:item.contactEntity="{ item }">
+            {{ item.contactEntity.username }}
+          </template>
+          <template v-slot:item.actions="{ item }">
+            <v-btn
+              @click="trace(item)"
+            >Coucou</v-btn>
+          </template>
         </v-data-table>
       </v-card-text>
 
@@ -281,7 +281,6 @@ export default {
       let self = this
       let transaction = {
         "montant" : this.montant,
-        /* "contactEntity" : {"id" : this.contact} */
         "contactEntity" : {"id" : this.contact},
       }
 
