@@ -108,6 +108,7 @@ export default {
     logIn: function() {
        this.axios
         .get("http://localhost:8080/contacts/list")
+        /* .get("http://localhost:8080/users/contacts/list") */
         .then(function(response) {
           console.log(response)
         })

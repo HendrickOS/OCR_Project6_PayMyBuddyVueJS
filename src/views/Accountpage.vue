@@ -156,8 +156,8 @@
                 sm="6"
               >
                 <v-select
-                  v-model="upadateSolde"
-                  :items="amounts"
+                  v-model="updateSolde"
+                  :items="soldes"
                   label="Solde"
                 ></v-select>
               </v-col>
@@ -197,7 +197,7 @@
           <template v-slot:item.remove="{ item }">
             <v-btn
               fab
-              small
+              x-small
               color="error"
               @click="selectForDelete(item)"
             >
@@ -208,7 +208,7 @@
           <template v-slot:item.edit="{ item }">
             <v-btn
               fab
-              small
+              x-small
               color="success"
               @click="edit(item)"
             >
@@ -297,6 +297,7 @@ export default {
       let self= this
        this.axios
         .get("http://localhost:8080/contacts/list")
+        /* .get("http://localhost:8080/users/contacts/list") */
         .then(function(response) {
           console.log(response)
           self.accounts = response.data
@@ -316,9 +317,16 @@ export default {
         "description" : this.description,
         "solde" : this.solde,
       }
+      /* let user = {
+        "id" : this.id,
+        "username" : this.username,
+        "email" : this.email,
+        "solde" : this.solde,
+      } */
 
       this.axios
         .post("http://localhost:8080/contacts/", contact)
+        /* .post("http://localhost:8080/users/contacts", user) */
         .then(function(response) {
           console.log(response)
           self.accounts = response.data
@@ -343,16 +351,33 @@ export default {
       this.editDialog = true
     },
 
+    /* edit(item){
+      this.updateId = item.id
+      this.updateUsername = item.username
+      this.updateEmail = item.email
+      this.password = item.password
+      this.editDialog = true
+    }, */
+
     editAction () {
       let self = this
       let contact = {
+        "id" : this.updateId,
         "username" : this.updateUsername,
         "description" : this.updateDescription,
         "solde" : this.updateSolde,
       }
+      /* let user = {
+        "id" : this.updateId,
+        "username" : this.updateUsername,
+        "email" : this.updateEmail,
+        "password" : this.updatePassword,
+        "solde" : this.updateSolde,
+      } */
 
       this.axios
         .put("http://localhost:8080/contacts/", contact)
+        /* .put("http://localhost:8080/users/", user) */
         .then(function(response) {
           console.log(response)
           self.accounts = response.data
@@ -372,10 +397,6 @@ export default {
 
     deleteAction () {
       let self = this
-      let contact = {
-        "id" : this.selectIdForDelete
-      }
-
       this.axios
         .delete("http://localhost:8080/contacts/", {
           data: {
@@ -429,9 +450,6 @@ export default {
       valid: true,
       username: '',
       description: '',
-      updateUsername: '',
-      updateDescription:'',
-      /* solde: 0, */
       soldes: [
         '5',
         '10',
@@ -439,6 +457,10 @@ export default {
         '20',
       ],
 
+      updateUsername: '',
+      updateDescription:'',
+      updateId:'',
+      
       usernameRules: [
         v => !!v || 'Username is required',
         v => (v && v.length <= 10) || 'Username must be less than 10 characters',

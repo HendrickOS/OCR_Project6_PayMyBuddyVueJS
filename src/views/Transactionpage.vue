@@ -130,12 +130,10 @@
         >
           <template v-slot:item.contactEntity="{ item }">
             {{ item.contactEntity.username }}
+          <!-- <template v-slot:item.userEntity="{ item }">
+            {{ item.userEntity.username }} -->
           </template>
-          <template v-slot:item.actions="{ item }">
-            <v-btn
-              @click="trace(item)"
-            >Coucou</v-btn>
-          </template>
+          
         </v-data-table>
       </v-card-text>
 
@@ -211,8 +209,9 @@ export default {
       this.navigate("loginpage");
     }
     else{
-      this.loadTransactions(),
-      this.loadContacts()
+      this.loadTransactions();
+      this.loadContacts();
+      this.loadSolde();
     }
 
 
@@ -265,9 +264,27 @@ export default {
       let self= this
        this.axios
         .get("http://localhost:8080/contacts/list")
+        /* .get("http://localhost:8080/users/contacts/list") */
         .then(function(response) {
           console.log(response)
           self.contacts = response.data
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+        .finally(function() {
+
+        });
+    },
+
+     loadSolde: function() {
+      let self= this
+       this.axios
+        .get("http://localhost:8080/users/solde")
+        /* .get("http://localhost:8080/users/contacts/list") */
+        .then(function(response) {
+          console.log(response)
+          self.solde = response.data
         })
         .catch(function(error) {
           console.log(error)
@@ -282,6 +299,7 @@ export default {
       let transaction = {
         "montant" : this.montant,
         "contactEntity" : {"id" : this.contact},
+        /* "userEntity" : {"id" : this.contact}, */
       }
 
       this.axios
@@ -306,9 +324,6 @@ export default {
       console.log(transaction)
     },
 
-    /* close () {
-      this.$refs.form.resetValidation()
-    }, */
 
     crediter () {
       /* solde = this.solde + crediterCompte ; */
@@ -351,6 +366,7 @@ export default {
               value: 'id',
             },
             { text: 'Contact', value: 'contactEntity' },
+            /* { text: 'Contact', value: 'userEntity' }, */
             { text: 'Montant', value: 'montant' },
             { text: 'Actions', value: 'actions' },
           ],
