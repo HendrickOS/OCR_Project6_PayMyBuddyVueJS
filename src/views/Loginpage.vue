@@ -19,8 +19,8 @@
             <form>
 
               <v-text-field
-                v-model="email"
-                label="E-mail"
+                v-model="username"
+                label="Username"
                 required
               ></v-text-field>
 
@@ -35,8 +35,10 @@
                   @click:append="showPassword = !showPassword"
                 >
               ></v-text-field>
-
+              
               <v-btn class="mr-4" :disabled="!validatedFields" @click="submit"> connection </v-btn>
+              <p class="pt-3">Newcomers: <a href="http://localhost:8081/#/createaccountpage"> Create Account </a></p>
+                
               
             </form>
 
@@ -69,22 +71,13 @@ export default {
     
 
     validatedFields: function () {
-      /* debugger */
-      if (this.mode == 'signUp') {
-        if (this.email != "" /* && this.prenom != "" */ && this.nom != "" && this.password != "") {
+        if (this.username != "" && this.password != "") {
           return true;
         } else {
           return false;
         }
-      } else {
-        if (this.email != "" && this.password != "") {
-          return true;
-        } else {
-          return false;
-        }
-      }
+    },
   },
-},
 
   methods: {
 
@@ -103,12 +96,13 @@ export default {
     goTransactionpage: function() {
       this.navigate("transactionpage");
     },
+    goCreateAccountPage: function(){
+      this.navigate("createaccountpage");
+    },
 
-    /* testOtherMethod: function() { */
     logIn: function() {
        this.axios
-        .get("http://localhost:8080/contacts/list")
-        /* .get("http://localhost:8080/users/contacts/list") */
+        .get("http://localhost:8080/users/contacts/list")
         .then(function(response) {
           console.log(response)
         })
@@ -120,29 +114,20 @@ export default {
         });
     },
 
-    create:function(){
-      
-    },
-
     submit:function(){
       let self = this
-      let user = {"username" : this.email, "password" : this.password}
+      let user = {"username" : this.username, "password" : this.password}
 
       this.axios
         .post("http://localhost:8080/login/", user)
         .then(function(response) {
           console.log(response)
-          /* console.log("francois") */
           document.token=response.data;
            if (document.targetpage){
             self.navigate(document.targetpage)
           } else {
               self.navigate("accountpage")
           }
-          
-          /* self.goLoginpage(); */
-          /* self.testOtherMethod(); */
-
         })
         .catch(function(error) {
           console.log(error)
@@ -150,7 +135,6 @@ export default {
         .finally(function() {
 
         });
-        /* console.log("coucou") */
     },
 
   },
@@ -158,8 +142,7 @@ export default {
   data () {
 
     return {
-      /* mode: 'signIn', */
-      email: 'springuser',
+      username: 'springuser',
       nom: '',
       password: 'user123',
 

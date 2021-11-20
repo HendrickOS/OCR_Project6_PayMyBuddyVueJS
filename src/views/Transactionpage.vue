@@ -1,8 +1,8 @@
 <template>
   <div>
-
+    <!-- Dialogue Transfert à un contact -->
     <v-dialog
-      v-model="dialog"
+      v-model="paymentDialog"
       max-width="500px"
     >
       <v-card
@@ -17,9 +17,9 @@
             lazy-validation
           >
             <v-select
-              v-model="contact"
+              v-model="user"
               label="Contact"
-              :items="contacts"
+              :items="users"
               item-text="username"
               item-value="id"
             ></v-select>
@@ -57,7 +57,7 @@
 
           <v-btn
             color="blue darken-4"
-            @click="dialog = false"
+            @click="paymentDialog = false"
           >
             Close
           </v-btn>
@@ -66,11 +66,12 @@
 
       </v-card>
     </v-dialog>
+    <!-- Fin Dialogue Transfert à un contact -->
 
 
-
+    <!-- Dialogue Réapprovisionner porte-monnaie -->
     <v-dialog
-      v-model="supply"
+      v-model="supplyDialog"
       max-width="500px"
     >
     <v-card
@@ -104,7 +105,7 @@
 
           <v-btn
             color="blue darken-4"
-            @click="supply = false"
+            @click="supplyDialog = false"
           >
             Close
           </v-btn>
@@ -112,13 +113,9 @@
 
       </v-card>
     </v-dialog>
+    <!-- Fin Dialogue Réapprovisionner porte-monnaie -->
 
    
-
-
-
-   
-
   
     <v-card>
       <v-card-text>
@@ -128,10 +125,10 @@
           :items-per-page="5"
           class="elevation-1"
         >
-          <template v-slot:item.contactEntity="{ item }">
-            {{ item.contactEntity.username }}
-          <!-- <template v-slot:item.userEntity="{ item }">
-            {{ item.userEntity.username }} -->
+          <!-- <template v-slot:item.contactEntity="{ item }">
+            {{ item.contactEntity.username }} -->
+          <template v-slot:item.userEntity="{ item }">
+            {{ item.userEntity.username }}
           </template>
           
         </v-data-table>
@@ -158,7 +155,7 @@
           small
           color="green accent-4"
           dark
-          @click="supply = !supply"
+          @click="supplyDialog = !supplyDialog"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -171,7 +168,7 @@
           small
           color="red accent-2"
           dark
-          @click="dialog = !dialog"
+          @click="paymentDialog = !paymentDialog"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -263,8 +260,8 @@ export default {
     loadContacts: function() {
       let self= this
        this.axios
-        .get("http://localhost:8080/contacts/list")
-        /* .get("http://localhost:8080/users/contacts/list") */
+        /* .get("http://localhost:8080/contacts/list") */
+        .get("http://localhost:8080/users/contacts/list")
         .then(function(response) {
           console.log(response)
           self.contacts = response.data
@@ -298,8 +295,8 @@ export default {
       let self = this
       let transaction = {
         "montant" : this.montant,
-        "contactEntity" : {"id" : this.contact},
-        /* "userEntity" : {"id" : this.contact}, */
+       /*  "contactEntity" : {"id" : this.contact}, */
+        "userEntity" : {"id" : this.contact},
       }
 
       this.axios
@@ -336,7 +333,7 @@ export default {
         .post("http://localhost:8080/transaction/supplying", approvisionner)
         .then(function(response) {
           console.log(response)
-          self.supply = false
+          self.supplyDialog = false
         })
         .catch(function(error) {
           console.log(error)
@@ -371,8 +368,8 @@ export default {
             { text: 'Actions', value: 'actions' },
           ],
 
-      dialog: false,
-      supply: false,
+      paymentDialog: false,
+      supplyDialog: false,
 
       valid: true,
 

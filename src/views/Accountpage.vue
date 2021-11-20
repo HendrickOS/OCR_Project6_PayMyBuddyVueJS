@@ -2,7 +2,7 @@
   <div>
     <!-- Dialogue Add Contact -->
     <v-dialog
-      v-model="dialog"
+      v-model="addDialog"
       max-width="500px"
     >
       <v-card
@@ -12,37 +12,18 @@
 
         <v-card-text class="pa-5">
 
-          <v-form
-            ref="form"
-            v-model="valid"
-            lazy-validation
-          >
-            <v-text-field
-              v-model="username"
-              :counter="10"
-              :rules="usernameRules"
-              label="Username"
-              required
-            ></v-text-field>
-
-            <v-text-field
-              v-model="description"
-              :counter="10"
-              :rules="descriptionRules"
-              label="Description"
-              required
-            ></v-text-field>
-
-            <v-select
-              v-model="solde"
-              :items="soldes"
-              label="Solde"
-              required
-              >
-            </v-select>
-
-            
-          </v-form>
+          <v-data-table
+          :headers="headers"
+          :items="users"
+          :items-per-page="5"
+          class="elevation-1"
+        >
+          <template v-slot:item.userEntity="{ item }">
+            {{ item.userEntity.username }}
+          </template>
+          
+        </v-data-table>
+              
 
         </v-card-text>
 
@@ -52,7 +33,7 @@
             :disabled="!valid"
             color="success"
             class="mr-4"
-            @click="validate"
+            @click="addAction"
           >
             Validate
           </v-btn>
@@ -60,14 +41,14 @@
           <v-btn
             color="error"
             class="mr-4"
-            @click="reset"
+            @click="addReset"
           >
             Reset Form
           </v-btn>
 
           <v-btn
             color="blue darken-4"
-            @click="dialog = false"
+            @click="addDialog = false"
           >
             Close
           </v-btn>
@@ -155,11 +136,7 @@
                 cols="12"
                 sm="6"
               >
-                <v-select
-                  v-model="updateSolde"
-                  :items="soldes"
-                  label="Solde"
-                ></v-select>
+                
               </v-col>
             </v-row>
           </v-container>
@@ -227,7 +204,7 @@
           small
           color="red accent-2"
           dark
-          @click="dialog = !dialog"
+          @click="addDialog = !addDialog"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
@@ -296,8 +273,7 @@ export default {
     loadAccounts: function() {
       let self= this
        this.axios
-        .get("http://localhost:8080/contacts/list")
-        /* .get("http://localhost:8080/users/contacts/list") */
+        .get("http://localhost:8080/users/contacts/list")
         .then(function(response) {
           console.log(response)
           self.accounts = response.data
@@ -310,27 +286,21 @@ export default {
         });
     },
 
-    validate () {
+    addAction () {
       let self = this
-      let contact = {
-        "username" : this.username,
-        "description" : this.description,
-        "solde" : this.solde,
-      }
-      /* let user = {
+      let user = {
         "id" : this.id,
         "username" : this.username,
         "email" : this.email,
         "solde" : this.solde,
-      } */
+      }
 
       this.axios
-        .post("http://localhost:8080/contacts/", contact)
-        /* .post("http://localhost:8080/users/contacts", user) */
+        .post("http://localhost:8080/users/contacts", user)
         .then(function(response) {
           console.log(response)
           self.accounts = response.data
-          self.dialog = false
+          self.addDialog = false
         })
         .catch(function(error) {
           console.log(error)
@@ -340,7 +310,7 @@ export default {
         });
     },
 
-    reset () {
+    addReset () {
       this.$refs.form.reset()
     },
 
@@ -427,6 +397,8 @@ export default {
 
       accounts: [],
 
+      users: [],
+
       headers: [
             {
               text: 'ID',
@@ -441,7 +413,7 @@ export default {
             { text: 'Delete', value: 'remove' },
           ],
 
-      dialog: false,
+      addDialog: false,
       deleteDialog: false,
       editDialog: false,
 
