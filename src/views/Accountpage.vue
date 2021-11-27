@@ -12,17 +12,20 @@
 
         <v-card-text class="pa-5">
 
-          <v-data-table
-          :headers="headers"
-          :items="users"
-          :items-per-page="5"
-          class="elevation-1"
-        >
-          <template v-slot:item.userEntity="{ item }">
-            {{ item.userEntity.username }}
-          </template>
-          
-        </v-data-table>
+          <v-form
+            ref="form"
+            v-model="valid"
+            lazy-validation
+          >
+            <v-select
+              v-model="user"
+              label="Contact"
+              :items="users"
+              item-text="username"
+              item-value="id"
+            ></v-select>
+
+          </v-form>
               
 
         </v-card-text>
@@ -35,15 +38,7 @@
             class="mr-4"
             @click="addAction"
           >
-            Validate
-          </v-btn>
-
-          <v-btn
-            color="error"
-            class="mr-4"
-            @click="addReset"
-          >
-            Reset Form
+            Add
           </v-btn>
 
           <v-btn
@@ -96,72 +91,6 @@
   </v-row>
     <!-- Fin Dialogue Delete -->
 
-    <!-- Dialogue Update -->
-    <v-row justify="center">
-    <v-dialog
-      v-model="editDialog"
-      persistent
-      max-width="600px"
-    >
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">User Profile</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
-                <v-text-field
-                  v-model="updateUsername"
-                  label="Username"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="updateDescription"
-                  label="Description"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="blue darken-1"
-            text
-            @click="editDialog = false"
-          >
-            Close
-          </v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            @click="editAction"
-          >
-            Save
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-row>
-    <!-- Fin Dialogue Update -->
   
     <v-card>
       <v-card-text>
@@ -171,6 +100,8 @@
           :items-per-page="5"
           class="elevation-1"
         >
+
+        <!-- Bouton delete contact dans la liste -->
           <template v-slot:item.remove="{ item }">
             <v-btn
               fab
@@ -178,37 +109,34 @@
               color="error"
               @click="selectForDelete(item)"
             >
-            <v-icon>mdi-minus</v-icon>
+            <v-icon>mdi-delete</v-icon>
             </v-btn>
           </template>
+        <!-- Fin Bouton delete contact dans la liste -->
 
-          <template v-slot:item.edit="{ item }">
-            <v-btn
-              fab
-              x-small
-              color="success"
-              @click="edit(item)"
-            >
-            <v-icon>mdi-cached</v-icon>
-            </v-btn>
-          </template>
-        
         </v-data-table>
       </v-card-text>
-
+    
+    <!-- Bouton add contact -->
       <v-card-actions
         class="justify-end pr-5"
       >
+
+      <template v-slot:item.userEntity="{ item }">
+            {{ item.userEntity.username }}
+          </template>
+
         <v-btn
           fab
           small
-          color="red accent-2"
+          color="blue accent-2"
           dark
           @click="addDialog = !addDialog"
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
       </v-card-actions>
+    <!-- Fin Bouton add contact -->
 
       <v-container fluid>
         <v-row justify="space-around">
@@ -221,7 +149,6 @@
 
 <script>
 import commonMixin from "../mixin/commonMixin"
-/* import mdiDelete from '@mdi/js' */
 export default {
   name: "Accountpage",
   mixins: [commonMixin],
@@ -231,7 +158,7 @@ export default {
 
   mounted: function() {
 
-    this.$emit('pagetitle', "Page account")
+    this.$emit('pagetitle', "Add new contacts to your list")
 
     if (!this.token) {
       document.targetpage="accountpage";
@@ -291,8 +218,8 @@ export default {
       let user = {
         "id" : this.id,
         "username" : this.username,
-        "email" : this.email,
-        "solde" : this.solde,
+        /* "email" : this.email,
+        "solde" : this.solde, */
       }
 
       this.axios
@@ -310,55 +237,9 @@ export default {
         });
     },
 
-    addReset () {
+    /* addReset () {
       this.$refs.form.reset()
-    },
-
-    edit(item){
-      this.updateId = item.id
-      this.updateUsername = item.username
-      this.updateDescription = item.description
-      this.editDialog = true
-    },
-
-    /* edit(item){
-      this.updateId = item.id
-      this.updateUsername = item.username
-      this.updateEmail = item.email
-      this.password = item.password
-      this.editDialog = true
     }, */
-
-    editAction () {
-      let self = this
-      let contact = {
-        "id" : this.updateId,
-        "username" : this.updateUsername,
-        "description" : this.updateDescription,
-        "solde" : this.updateSolde,
-      }
-      /* let user = {
-        "id" : this.updateId,
-        "username" : this.updateUsername,
-        "email" : this.updateEmail,
-        "password" : this.updatePassword,
-        "solde" : this.updateSolde,
-      } */
-
-      this.axios
-        .put("http://localhost:8080/contacts/", contact)
-        /* .put("http://localhost:8080/users/", user) */
-        .then(function(response) {
-          console.log(response)
-          self.accounts = response.data
-        })
-        .catch(function(error) {
-          console.log(error)
-        })
-        .finally(function() {
-          self.editDialog = false
-        });
-    },
 
     selectForDelete(item){
       this.selectIdForDelete = item.id
@@ -368,7 +249,7 @@ export default {
     deleteAction () {
       let self = this
       this.axios
-        .delete("http://localhost:8080/contacts/", {
+        .delete("http://localhost:8080/users/contacts/", {
           data: {
             "id": this.selectIdForDelete
           }
@@ -399,6 +280,8 @@ export default {
 
       users: [],
 
+      user:'',
+
       headers: [
             {
               text: 'ID',
@@ -414,12 +297,13 @@ export default {
           ],
 
       addDialog: false,
-      deleteDialog: false,
       editDialog: false,
+      deleteDialog: false,
 
       selectIdForDelete: null,
 
       valid: true,
+
       username: '',
       description: '',
       soldes: [
@@ -440,9 +324,7 @@ export default {
       descriptionRules: [
         v => !!v || 'Description is required',
         v => (v && v.length <= 10) || 'Description must be valid',
-        /* v => /.+@.+\..+/.test(v) || 'Email must be valid', */
       ],
-      /* select: null, */
       
     };
   },  
@@ -450,7 +332,3 @@ export default {
 };
 
 </script>
-
-<style>
-
-</style>

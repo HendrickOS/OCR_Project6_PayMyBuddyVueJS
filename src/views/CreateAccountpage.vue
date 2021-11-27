@@ -68,7 +68,10 @@
       @click="resetValidation"
     >
       Reset Validation
-    </v-btn>
+  </v-btn>
+
+  <p class="pt-3">Already have an account ? : <a href="http://localhost:8081/#/loginpage"> Connect to an existing account </a></p>
+
   </v-form>
 
     
@@ -85,16 +88,7 @@ export default {
 
   mounted: function() {
 
-    this.$emit('pagetitle', "Page create account")
-
-    /* if (!this.token) {
-      document.targetpage="createaccountpage";
-      this.navigate("loginpage");
-    }
-    else{
-      this.loadAccounts()
-    } */
-
+    this.$emit('pagetitle', "Sign Up")
 
   },
 
@@ -103,14 +97,6 @@ export default {
     token: function () {
       return document.token
     },
-
-    /* validateFields: function () {
-      if (this.username != "" && this.email != "" && this.password != "" && this.passwordChek != "" && this.solde != "") {
-          return true;
-        } else {
-          return false;
-        }
-    } */
 
   },
 
@@ -160,12 +146,6 @@ export default {
         .then(function(response) {
           console.log(response)
           self.navigate("loginpage")
-          /* document.token=response.data;
-           if (document.targetpage){
-            self.navigate(document.targetpage)
-          } else {
-              self.navigate("loginpage")
-          } */
         })
         .catch(function(error) {
           console.log(error)
@@ -191,12 +171,12 @@ export default {
     return {
 
       validateFields: false,
-      username: 'testUser',
+      username: '',
       usernameRules: [
         v => !!v || 'Username is required',
         v => (v && v.length <= 10) || 'Username must be less than 10 characters',
       ],
-      email: 'test@test.test',
+      email: '',
       emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid',

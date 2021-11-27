@@ -11,6 +11,7 @@ import Accountpage from "./views/Accountpage.vue";
 import Loginpage from "./views/Loginpage.vue";
 import Transactionpage from "./views/Transactionpage.vue";
 import CreateAccountpage from "./views/CreateAccountpage.vue";
+import Settingspage from "./views/Settingspage.vue";
 
 import axios from "axios";
 import VueAxios from "vue-axios";
@@ -58,6 +59,11 @@ const router = new VueRouter({
             path: "/createaccountpage",
             name: "createaccountpage",
             component: CreateAccountpage,
+        },
+        {
+            path: "/settingspage",
+            name: "settingspage",
+            component: Settingspage,
         },
         {
             path: "/",

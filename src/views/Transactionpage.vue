@@ -18,10 +18,10 @@
           >
             <v-select
               v-model="user"
-              label="Contact"
+              label="User"
               :items="users"
               item-text="username"
-              item-value="id"
+              item-value="id"  
             ></v-select>
 
             <v-select
@@ -31,6 +31,10 @@
               label="Montant"
               required
             ></v-select>
+
+            <small>*Tax : 0,5%</small>
+            <p><strong>Montant TTC : {{montantTTC}}</strong></p>
+            
 
           </v-form>
 
@@ -42,7 +46,7 @@
             :disabled="!valid"
             color="success"
             class="mr-4"
-            @click="transferer"
+            @click="paymentAction"
           >
             Valider
           </v-btn>
@@ -125,31 +129,22 @@
           :items-per-page="5"
           class="elevation-1"
         >
-          <!-- <template v-slot:item.contactEntity="{ item }">
-            {{ item.contactEntity.username }} -->
+          
           <template v-slot:item.userEntity="{ item }">
             {{ item.userEntity.username }}
           </template>
-          
+
         </v-data-table>
       </v-card-text>
 
-      <v-card-actions
-      >
-
+      <v-card-actions>
 
       <div
         class="justify-start pr-5"
       >
           
         Solde : {{solde}} €
-        <!-- <v-text-field
-            label="Solde actuel"
-            placeholder="Dense & Rounded"
-            filled
-            rounded
-            dense
-          ></v-text-field> -->
+        
           <v-btn
           fab
           small
@@ -166,7 +161,7 @@
         <v-btn
           fab
           small
-          color="red accent-2"
+          color="blue accent-2"
           dark
           @click="paymentDialog = !paymentDialog"
         >
@@ -181,9 +176,9 @@
 
       <v-container fluid>
         <v-row justify="space-around">
-
         </v-row>
       </v-container>
+
     </v-card>
   </div>
 </template>
@@ -199,7 +194,7 @@ export default {
 
   mounted: function() {
 
-    this.$emit('pagetitle', "Page transaction")
+    this.$emit('pagetitle', "Check your pay & Send money")
 
     if (!this.token) {
       document.targetpage="transactionpage";
@@ -238,7 +233,7 @@ export default {
     },
 
     goTransactionpage: function() {
-      this.navigate("transactioncontactpage");
+      this.navigate("transactionpage");
     },
     
     loadTransactions: function() {
@@ -260,11 +255,10 @@ export default {
     loadContacts: function() {
       let self= this
        this.axios
-        /* .get("http://localhost:8080/contacts/list") */
         .get("http://localhost:8080/users/contacts/list")
         .then(function(response) {
           console.log(response)
-          self.contacts = response.data
+          self.users = response.data
         })
         .catch(function(error) {
           console.log(error)
@@ -278,7 +272,6 @@ export default {
       let self= this
        this.axios
         .get("http://localhost:8080/users/solde")
-        /* .get("http://localhost:8080/users/contacts/list") */
         .then(function(response) {
           console.log(response)
           self.solde = response.data
@@ -291,12 +284,11 @@ export default {
         });
     },
 
-    transferer () {
+    paymentAction () {
       let self = this
       let transaction = {
         "montant" : this.montant,
-       /*  "contactEntity" : {"id" : this.contact}, */
-        "userEntity" : {"id" : this.contact},
+        "userEntity" : {"id" : this.user},
       }
 
       this.axios
@@ -317,23 +309,19 @@ export default {
       this.$refs.form.reset()
     },
 
-    trace(transaction){
-      console.log(transaction)
-    },
-
 
     crediter () {
-      /* solde = this.solde + crediterCompte ; */
       let self = this
       let approvisionner = {
         "montant" : this.crediterCompte,
       }
 
       this.axios
-        .post("http://localhost:8080/transaction/supplying", approvisionner)
+        .post("http://localhost:8080/users/supplying", approvisionner)
         .then(function(response) {
           console.log(response)
           self.supplyDialog = false
+          
         })
         .catch(function(error) {
           console.log(error)
@@ -348,12 +336,10 @@ export default {
   data () {
 
     return {
-
-      contact: null,
-
-      contacts: [],
-
       transactions: [],
+
+      user: null,
+      users: [],
 
       headers: [
             {
@@ -362,14 +348,13 @@ export default {
               sortable: false,
               value: 'id',
             },
-            { text: 'Contact', value: 'contactEntity' },
-            /* { text: 'Contact', value: 'userEntity' }, */
+            { text: 'Contact', value: 'userEntity' },
             { text: 'Montant', value: 'montant' },
-            { text: 'Actions', value: 'actions' },
           ],
 
       paymentDialog: false,
       supplyDialog: false,
+      crediterCompte: 0,
 
       valid: true,
 
@@ -383,6 +368,8 @@ export default {
         '15',
         '20',
       ],
+      
+      montantTTC: this.montant * 1.005 ,
 
       solde: 0,
       

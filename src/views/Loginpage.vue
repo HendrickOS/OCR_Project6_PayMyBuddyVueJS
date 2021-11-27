@@ -62,7 +62,7 @@ export default {
 
   mounted: function() {
 
-    this.$emit('pagetitle', "Page de login")
+    this.$emit('pagetitle', "Sign In")
 
   },
 

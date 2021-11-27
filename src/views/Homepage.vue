@@ -62,7 +62,7 @@ export default {
 
   mounted: function() {
 
-    this.$emit('pagetitle', "Page Home")
+    this.$emit('pagetitle', "Who are we ?")
 
   },
 
