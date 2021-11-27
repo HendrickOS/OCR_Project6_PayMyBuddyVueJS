@@ -5,7 +5,7 @@
     
       <v-card>
         <v-card-title>
-          <span class="text-h5">{{username}} Profile</span>
+          <span class="text-h5">Hi {{username}}, you want to update your informations ?</span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -95,7 +95,8 @@ export default {
       this.navigate("loginpage");
     }
     else{
-      this.loadAccounts()
+      this.loadAccounts();
+      this.loadUsername();
     }
 
 
@@ -125,6 +126,22 @@ export default {
 
     goTransactionpage: function() {
       this.navigate("transactionpage");
+    },
+
+    loadUsername: function() {
+      let self= this
+       this.axios
+        .get("http://localhost:8080/users/username")
+        .then(function(response) {
+          console.log(response)
+          self.username = response.data
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+        .finally(function() {
+
+        });
     },
     
 
@@ -170,7 +187,7 @@ export default {
 
     return {
 
-      username: 'Nametest',
+      username: '',
       updateId: '',
       updateUsername: '',
       updateEmail: '',

@@ -14,8 +14,6 @@
 
           <v-form
             ref="form"
-            v-model="valid"
-            lazy-validation
           >
             <v-select
               v-model="user"
@@ -33,7 +31,7 @@
         <v-card-actions>
 
           <v-btn
-            :disabled="!valid"
+            :disabled="!user"
             color="success"
             class="mr-4"
             @click="addAction"
@@ -94,6 +92,9 @@
   
     <v-card>
       <v-card-text>
+        {{accounts}}
+        <hr>
+        {{users}}
         <v-data-table
           :headers="headers"
           :items="accounts"
@@ -166,6 +167,7 @@ export default {
     }
     else{
       this.loadAccounts()
+      this.loadUsers()
     }
 
 
@@ -213,21 +215,42 @@ export default {
         });
     },
 
+    loadUsers: function() {
+      let self= this
+      this.user = null
+       this.axios
+        .get("http://localhost:8080/users/list")
+        .then(function(response) {
+          console.log(response)
+          self.users = response.data
+          if(self.users.length > 0){
+            self.user = self.users[0]
+          }
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+        .finally(function() {
+
+        });
+    },
+
     addAction () {
       let self = this
       let user = {
-        "id" : this.id,
-        "username" : this.username,
+        "id" : this.user.id,
+        /* "username" : this.username, */
         /* "email" : this.email,
         "solde" : this.solde, */
       }
-
+      debugger
       this.axios
         .post("http://localhost:8080/users/contacts", user)
         .then(function(response) {
           console.log(response)
           self.accounts = response.data
           self.addDialog = false
+          self.loadUsers()
         })
         .catch(function(error) {
           console.log(error)
