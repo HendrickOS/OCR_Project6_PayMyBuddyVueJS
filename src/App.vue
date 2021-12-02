@@ -14,20 +14,6 @@
       
       <v-spacer></v-spacer>
       
-      <!-- 
-      <div class="my-2">
-        <v-btn
-          color="primary"
-          fab
-          dark
-          x-small
-          @click="userDialog = !userDialog"
-        >
-          <v-icon>mdi-account</v-icon>
-        </v-btn>
-      </div>
-      -->
-
       <div class="text-center">
     <v-menu transition="scale-transition">
       <template v-slot:activator="{ on, attrs }">
@@ -61,10 +47,11 @@
               <v-icon color="success">mdi-account</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title @click="goLoginpage">Log In</v-list-item-title>
+              <v-list-item-title @click="goLoginpage">Log In </v-list-item-title>
             </v-list-item-content>
 
             <v-divider></v-divider>
+            {{"\n test"}}
 
             <v-list-item-icon>
               <v-icon color="purple">mdi-wrench</v-icon>

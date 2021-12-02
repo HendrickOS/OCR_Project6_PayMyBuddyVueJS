@@ -243,7 +243,7 @@ export default {
         /* "email" : this.email,
         "solde" : this.solde, */
       }
-      debugger
+      /* debugger */
       this.axios
         .post("http://localhost:8080/users/contacts", user)
         .then(function(response) {
@@ -315,12 +315,10 @@ export default {
             { text: 'Username', value: 'username' },
             { text: 'Description', value: 'description' },
             { text: 'Solde', value: 'solde' },
-            { text: 'Update', value: 'edit' },
             { text: 'Delete', value: 'remove' },
           ],
 
       addDialog: false,
-      editDialog: false,
       deleteDialog: false,
 
       selectIdForDelete: null,
@@ -336,19 +334,6 @@ export default {
         '20',
       ],
 
-      updateUsername: '',
-      updateDescription:'',
-      updateId:'',
-      
-      usernameRules: [
-        v => !!v || 'Username is required',
-        v => (v && v.length <= 10) || 'Username must be less than 10 characters',
-      ],
-      descriptionRules: [
-        v => !!v || 'Description is required',
-        v => (v && v.length <= 10) || 'Description must be valid',
-      ],
-      
     };
   },  
 

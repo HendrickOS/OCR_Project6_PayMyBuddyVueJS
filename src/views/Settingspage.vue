@@ -28,10 +28,17 @@
               >
               </v-col>
               
-              <v-col cols="12">
+              <v-col cols="6">
                 <v-text-field
                   v-model="updateEmail"
                   label="E-mail"
+                ></v-text-field>
+              </v-col>
+
+              <v-col cols="12">
+                <v-text-field
+                  v-model="updateDescription"
+                  label="Description"
                 ></v-text-field>
               </v-col>
 
@@ -149,6 +156,7 @@ export default {
       this.updateId = item.id
       this.updateUsername = item.username
       this.updateEmail = item.email
+      this.updateDescription = item.description
       this.password = item.password
     },
 
@@ -158,6 +166,7 @@ export default {
         "id" : this.updateId,
         "username" : this.updateUsername,
         "email" : this.updateEmail,
+        "description": this.updateDescription,
         "password" : this.updatePassword,
       }
 
@@ -191,6 +200,7 @@ export default {
       updateId: '',
       updateUsername: '',
       updateEmail: '',
+      updateDescription: '',
       updatePassword: '',
       
       

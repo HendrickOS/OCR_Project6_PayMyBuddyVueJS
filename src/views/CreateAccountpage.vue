@@ -20,6 +20,12 @@
     ></v-text-field>
 
     <v-text-field
+      v-model="description"
+      label="Description"
+      required
+    ></v-text-field>
+
+    <v-text-field
       v-model="password"
       :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
       :type="showPassword ? 'text' : 'password'"
@@ -139,6 +145,7 @@ export default {
       let user = {"username" : this.username,
                   "email" : this.email, 
                   "password" : this.password,
+                  "description": this.description,
                   }
 
       this.axios
@@ -181,6 +188,7 @@ export default {
         v => !!v || 'E-mail is required',
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
       ],
+      description: '',
       showPassword: false,
       password: '',
       passwordRules: [
