@@ -49,14 +49,26 @@
             @click="paymentAction"
           >
             Valider
+            <v-icon
+          dark
+          right
+        >
+          mdi-checkbox-marked-circle
+        </v-icon>
           </v-btn>
 
           <v-btn
-            color="error"
+            color="warning"
             class="mr-4"
             @click="reset"
           >
-            Reset Form
+            Reset
+            <v-icon
+          dark
+          right
+        >
+          mdi-cancel
+        </v-icon>
           </v-btn>
 
           <v-btn
@@ -64,6 +76,12 @@
             @click="paymentDialog = false"
           >
             Close
+            <v-icon
+          dark
+          left
+        >
+          mdi-minus-circle
+        </v-icon>
           </v-btn>
 
           </v-card-actions>
@@ -123,27 +141,41 @@
   
     <v-card>
       <v-card-text>
+        <!-- {{transactions}}
+        <hr> -->
+
         <v-data-table
           :headers="headers"
           :items="transactions"
           :items-per-page="5"
           class="elevation-1"
         >
-          
-          <template v-slot:item.userEntity="{ item }">
+
+        <template v-slot:item.userEntity="{ item }">
             {{ item.userEntity.username }}
           </template>
-
-        </v-data-table>
+          
+          </v-data-table>
       </v-card-text>
 
-      <v-card-actions>
-
-      <div
-        class="justify-start pr-5"
+      <v-card-actions
       >
-          
-        Solde : {{solde}} €
+
+        Send money to your contacts 
+
+        <v-btn
+          fab
+          small
+          color="blue accent-2"
+          dark
+          @click="paymentDialog = !paymentDialog"
+        >
+          <v-icon>mdi-arrow-up</v-icon>
+        </v-btn>
+
+        <v-spacer></v-spacer>
+
+        Pay : {{solde}} €
         
           <v-btn
           fab
@@ -154,20 +186,6 @@
         >
           <v-icon>mdi-plus</v-icon>
         </v-btn>
-    </div>
-    
-      <div
-      >
-        <v-btn
-          fab
-          small
-          color="blue accent-2"
-          dark
-          @click="paymentDialog = !paymentDialog"
-        >
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
-      </div>
 
       </v-card-actions>
 
@@ -204,10 +222,8 @@ export default {
       this.loadTransactions();
       this.loadContacts();
       this.loadSolde();
+      
     }
-
-
-  
   },
 
   computed: {   
@@ -296,6 +312,7 @@ export default {
         .then(function(response) {
           console.log(response)
           self.dialog = false
+          self.loadTransactions()
         })
         .catch(function(error) {
           console.log(error)
@@ -321,6 +338,7 @@ export default {
         .then(function(response) {
           console.log(response)
           self.supplyDialog = false
+          self.loadSolde()
           
         })
         .catch(function(error) {
@@ -348,7 +366,7 @@ export default {
               sortable: false,
               value: 'id',
             },
-            { text: 'Contact', value: 'userEntity' },
+            { text: 'Contact', value: 'user' },
             { text: 'Montant', value: 'montant' },
           ],
 
@@ -365,8 +383,11 @@ export default {
       montants: [
         '5',
         '10',
-        '15',
         '20',
+        '50',
+        '100',
+        '500',
+        '1000'
       ],
       
       montantTTC: this.montant * 1.005 ,

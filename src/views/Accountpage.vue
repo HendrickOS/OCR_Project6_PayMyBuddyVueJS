@@ -178,7 +178,6 @@ export default {
     token: function () {
       return document.token
     }
-
   },
 
   methods: {
@@ -280,6 +279,7 @@ export default {
         .then(function(response) {
           console.log(response)
           self.accounts = response.data
+          self.loadUsers()
         })
         .catch(function(error) {
           console.log(error)

@@ -1,86 +1,97 @@
 <template>
   <div>
-
-    <v-row justify="center">
-    
+   <v-dialog
+      v-model="editDialog"
+      persistent
+      max-width="290"
+    >
       <v-card>
-        <v-card-title>
-          <span class="text-h5">Hi {{username}}, you want to update your informations ?</span>
+        <v-card-title class="text-h5">
+          Êtes-vous sûr ?
         </v-card-title>
         <v-card-text>
-          <v-container>
-            <v-row>
-
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
-                <v-text-field
-                  v-model="updateUsername"
-                  label="Username"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
-              </v-col>
-              
-              <v-col cols="6">
-                <v-text-field
-                  v-model="updateEmail"
-                  label="E-mail"
-                ></v-text-field>
-              </v-col>
-
-              <v-col cols="12">
-                <v-text-field
-                  v-model="updateDescription"
-                  label="Description"
-                ></v-text-field>
-              </v-col>
-
-              
-              <v-col
-                cols="12"
-                sm="6"
-                md="5"
-              >
-                <v-text-field
-                  v-model="updatePassword"
-                  label="Password"
-                ></v-text-field>
-              </v-col>
-              
-            </v-row>
-          </v-container>
+          Ces paramètres seront changés
         </v-card-text>
-
         <v-card-actions>
-        <v-spacer></v-spacer>
-         
+          <v-spacer></v-spacer>
           <v-btn
-            color="warning"
-            class="mr-4"
-            @click="reset"
+            color="red darken-1"
+            text
+            @click="editDialog = false"
           >
-            Reset Form
+            Refuser
           </v-btn>
-
           <v-btn
-            color="success"
+            color="green darken-1"
+            text
             @click="editAction"
           >
-            <v-icon left>mdi-pencil</v-icon>
-            Save
+            Confirmer
           </v-btn>
         </v-card-actions>
       </v-card>
-  </v-row>
-  
-    
+  </v-dialog>
+
+  <v-card>
+    <v-card-title>
+          <span class="text-h5">Hi {{username}}, you want to update your informations ?</span>
+        </v-card-title>
+  <v-form
+    ref="form"
+    v-model="valid"
+  >
+    <v-text-field
+      v-model="updateUsername"
+      :counter="10"
+      
+      label="Username"
+      
+    ></v-text-field>
+
+    <v-text-field
+      v-model="updateEmail"
+      
+      label="E-mail"
+      
+    ></v-text-field>
+
+    <v-text-field
+      v-model="updateDescription"
+      label="Description"
+      
+    ></v-text-field>
+
+    <v-text-field
+      v-model="updatePassword"
+      label="Password"
+    ></v-text-field>
+
+    <v-card-actions>
+    <v-spacer></v-spacer>
+
+    <v-btn
+      color="warning"
+      class="mr-4"
+      @click="reset"
+    >
+      Reset Form
+      <v-icon>mdi-cancel</v-icon>
+    </v-btn>
+
+    <v-btn
+      :disabled="!valid"
+      color="success"
+      class="mr-4"
+      @click="editDialog"
+    >
+      Validate
+      <v-icon>mdi-pencil</v-icon>
+    </v-btn>
+
+    </v-card-actions>
+
+  </v-form>
+  </v-card>
   </div>
 </template>
 
@@ -102,7 +113,6 @@ export default {
       this.navigate("loginpage");
     }
     else{
-      this.loadAccounts();
       this.loadUsername();
     }
 
@@ -142,6 +152,7 @@ export default {
         .then(function(response) {
           console.log(response)
           self.username = response.data
+          self.loadUsername()
         })
         .catch(function(error) {
           console.log(error)
@@ -195,6 +206,10 @@ export default {
   data () {
 
     return {
+
+      valid: true,
+
+      editDialog: false,
 
       username: '',
       updateId: '',
