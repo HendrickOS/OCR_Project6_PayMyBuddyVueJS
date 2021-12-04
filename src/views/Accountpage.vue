@@ -16,7 +16,7 @@
             ref="form"
           >
             <v-select
-              v-model="user"
+              v-model="selectedContactId"
               label="Contact"
               :items="users"
               item-text="username"
@@ -31,7 +31,7 @@
         <v-card-actions>
 
           <v-btn
-            :disabled="!user"
+            :disabled="!selectedContactId"
             color="success"
             class="mr-4"
             @click="addAction"
@@ -95,6 +95,8 @@
         {{accounts}}
         <hr>
         {{users}}
+        <hr>
+        {{selectedContactId}}
         <v-data-table
           :headers="headers"
           :items="accounts"
@@ -216,14 +218,14 @@ export default {
 
     loadUsers: function() {
       let self= this
-      this.user = null
+      this.selectedContactId = null
        this.axios
         .get("http://localhost:8080/users/list")
         .then(function(response) {
           console.log(response)
           self.users = response.data
           if(self.users.length > 0){
-            self.user = self.users[0]
+            self.selectedContactId = self.users[0].id
           }
         })
         .catch(function(error) {
@@ -237,12 +239,9 @@ export default {
     addAction () {
       let self = this
       let user = {
-        "id" : this.user.id,
-        /* "username" : this.username, */
-        /* "email" : this.email,
-        "solde" : this.solde, */
+        "id" : this.selectedContactId,
       }
-      /* debugger */
+      debugger
       this.axios
         .post("http://localhost:8080/users/contacts", user)
         .then(function(response) {
@@ -303,7 +302,7 @@ export default {
 
       users: [],
 
-      user:'',
+      selectedContactId: null,
 
       headers: [
             {

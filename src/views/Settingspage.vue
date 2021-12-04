@@ -10,7 +10,7 @@
           Êtes-vous sûr ?
         </v-card-title>
         <v-card-text>
-          Ces paramètres seront changés
+          Vos paramètres seront changés
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -43,10 +43,8 @@
     <v-text-field
       v-model="updateUsername"
       :counter="10"
-      
       label="Username"
-      
-    ></v-text-field>
+    >aaaa</v-text-field>
 
     <v-text-field
       v-model="updateEmail"
@@ -82,7 +80,7 @@
       :disabled="!valid"
       color="success"
       class="mr-4"
-      @click="editDialog"
+      @click="editDialog = !editDialog"
     >
       Validate
       <v-icon>mdi-pencil</v-icon>
@@ -152,7 +150,6 @@ export default {
         .then(function(response) {
           console.log(response)
           self.username = response.data
-          self.loadUsername()
         })
         .catch(function(error) {
           console.log(error)
@@ -212,6 +209,7 @@ export default {
       editDialog: false,
 
       username: '',
+
       updateId: '',
       updateUsername: '',
       updateEmail: '',
