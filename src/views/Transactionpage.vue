@@ -141,8 +141,8 @@
   
     <v-card>
       <v-card-text>
-        <!-- {{transactions}}
-        <hr> -->
+        {{users}}
+        <hr>
 
         <v-data-table
           :headers="headers"
@@ -151,9 +151,9 @@
           class="elevation-1"
         >
 
-        <template v-slot:item.userEntity="{ item }">
+        <!-- <template v-slot:item.userEntity="{ item }">
             {{ item.userEntity.username }}
-          </template>
+          </template> -->
           
           </v-data-table>
       </v-card-text>
@@ -176,6 +176,8 @@
         <v-spacer></v-spacer>
 
         Pay : {{solde}} €
+        <hr>
+        {{crediterCompte}}
         
           <v-btn
           fab
@@ -329,6 +331,7 @@ export default {
 
     crediter () {
       let self = this
+      debugger
       let approvisionner = {
         "montant" : this.crediterCompte,
       }
@@ -337,6 +340,7 @@ export default {
         .post("http://localhost:8080/users/supplying", approvisionner)
         .then(function(response) {
           console.log(response)
+          self.solde = response.data
           self.supplyDialog = false
           self.loadSolde()
           

@@ -26,6 +26,8 @@
 
       <v-row>
       <h1 class="display-1">PRESENTATION</h1>
+      
+      <h2>Argent total des taxes : {{pmbMoney}}</h2>
       <p>Les fondateurs souhaitent développer l'activité et vous avez
          entendu parler d'une nouvelle idée de produit : une appli 
          qui permettrait aux clients de transférer de l'argent pour 
@@ -63,6 +65,7 @@ export default {
   mounted: function() {
 
     this.$emit('pagetitle', "Who are we ?")
+    this.loadPMBMoney()
 
   },
 
@@ -85,13 +88,35 @@ export default {
     goTransactionpage: function() {
       this.navigate("transactionpage");
     },
+
+    loadPMBMoney: function(){
+      let self= this
+      this.axios
+        .get("http://localhost:8080/transactions/taxemoney")
+        .then(function(response) {
+          console.log(response)
+          self.pmbMoney = response.data
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+        .finally(function() {
+
+        });
+    },
+    
     
   },
 
-  data: () => ({
-    drawer: false,
-    group: null,
-  })
+  data () {
+
+    return{
+
+      drawer: false,
+      group: null,
+      pmbMoney: 0,
+    }
+  },
 };
 </script>
 

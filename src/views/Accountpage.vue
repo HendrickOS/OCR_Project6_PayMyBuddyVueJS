@@ -94,7 +94,10 @@
       <v-card-text>
         {{accounts}}
         <hr>
+        test
+        <hr>
         {{users}}
+        <hr>
         <hr>
         {{selectedContactId}}
         <v-data-table
