@@ -223,7 +223,7 @@ export default {
       let self= this
       this.selectedContactId = null
        this.axios
-        .get("http://localhost:8080/users/list")
+        .get("http://localhost:8080/users/allusersbutme")
         .then(function(response) {
           console.log(response)
           self.users = response.data
