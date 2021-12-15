@@ -141,7 +141,7 @@
   
     <v-card>
       <v-card-text>
-        {{users}}
+        {{transactions}}
         <hr>
 
         <v-data-table
@@ -151,9 +151,9 @@
           class="elevation-1"
         >
 
-        <!-- <template v-slot:item.userEntity="{ item }">
+        <template v-slot:item.userEntity="{ item }">
             {{ item.userEntity.username }}
-          </template> -->
+          </template>
           
           </v-data-table>
       </v-card-text>
@@ -224,7 +224,6 @@ export default {
       this.loadTransactions();
       this.loadContacts();
       this.loadSolde();
-      this.loadMontantTTC();
       
     }
   },
@@ -304,23 +303,6 @@ export default {
         
     },
 
-    loadMontantTTC: function() {
-      let self= this
-      let amount = {"montant" : this.montant,}
-       this.axios
-        .get("http://localhost:8080/transactions/ttcamount", amount)
-        .then(function(response) {
-          console.log(response)
-          self.montantTTC = response.data
-        })
-        .catch(function(error) {
-          console.log(error)
-        })
-        .finally(function() {
-
-        });
-    },
-
     paymentAction () {
       let self = this
       let transaction = {
@@ -332,7 +314,7 @@ export default {
         .post("http://localhost:8080/transactions/transfert", transaction)
         .then(function(response) {
           console.log(response)
-          self.dialog = false
+          self.paymentDialog = false
           self.loadTransactions()
         })
         .catch(function(error) {
@@ -389,7 +371,7 @@ export default {
               sortable: false,
               value: 'id',
             },
-            { text: 'Contact', value: 'user' },
+            { text: 'Contact', value: 'userEntity' },
             { text: 'Montant', value: 'montant' },
           ],
 
@@ -413,8 +395,6 @@ export default {
         '1000'
       ],
       
-      montantTTC: 0,
-
       solde: 0,
       
     };
