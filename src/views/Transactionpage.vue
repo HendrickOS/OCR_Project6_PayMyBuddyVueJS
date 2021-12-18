@@ -102,17 +102,19 @@
     >
 
     <v-card-text class="pa-5">
-        <v-form
-          ref="form"
-          v-model="confirm"
-          lazy-validation
+
+      <v-form
+        ref="form"
+        v-model="confirm"
+        lazy-validation
+      >
+        <v-text-field
+          v-model="montantCrediter"
+          label="Montant à créditer"
         >
-          <v-text-field
-            v-model="crediterCompte"
-            label="Montant à créditer"
-          ></v-text-field>
-          </v-form>
-          </v-card-text>
+        </v-text-field>
+      </v-form>
+    </v-card-text>
 
           <v-card-actions>
 
@@ -120,7 +122,7 @@
             :disabled="!confirm"
             color="success"
             class="mr-4"
-            @click="crediter"
+            @click="supplyAction"
           >
             Crediter
           </v-btn>
@@ -151,8 +153,8 @@
           class="elevation-1"
         >
 
-        <template v-slot:item.userEntity="{ item }">
-            {{ item.userEntity.username }}
+        <template v-slot:item.contact="{ item }">
+            {{ item.contact.username }}
           </template>
           
           </v-data-table>
@@ -177,7 +179,7 @@
 
         Pay : {{solde}} €
         <hr>
-        {{crediterCompte}}
+        {{montantCrediter}}
         
           <v-btn
           fab
@@ -307,7 +309,7 @@ export default {
       let self = this
       let transaction = {
         "montant" : this.montant,
-        "userEntity" : {"id" : this.user},
+        "contact" : {"id" : this.user},
       }
 
       this.axios
@@ -330,20 +332,19 @@ export default {
     },
 
 
-    crediter () {
+    supplyAction () {
       let self = this
-      /* debugger */
-      let approvisionner = {
-        "montant" : this.crediterCompte,
+      let supply = {
+        "montant" : this.montantCrediter,
       }
-
+      debugger
       this.axios
-        .post("http://localhost:8080/users/supplying", approvisionner)
+        .post("http://localhost:8080/users/supplying", supply)
         .then(function(response) {
           console.log(response)
           self.solde = response.data
           self.supplyDialog = false
-          self.loadSolde()
+          /* self.loadSolde() */
           
         })
         .catch(function(error) {
@@ -371,13 +372,13 @@ export default {
               sortable: false,
               value: 'id',
             },
-            { text: 'Contact', value: 'userEntity' },
+            { text: 'Contact', value: 'contact' },
             { text: 'Montant', value: 'montant' },
           ],
 
       paymentDialog: false,
       supplyDialog: false,
-      crediterCompte: 0,
+      montantCrediter: 0,
 
       valid: true,
 

@@ -92,14 +92,14 @@
   
     <v-card>
       <v-card-text>
-        {{accounts}}
+       <!--  {{accounts}}
         <hr>
         test
         <hr>
         {{users}}
         <hr>
         <hr>
-        {{selectedContactId}}
+        {{selectedContactId}} -->
         <v-data-table
           :headers="headers"
           :items="accounts"
@@ -244,7 +244,6 @@ export default {
       let user = {
         "id" : this.selectedContactId,
       }
-      debugger
       this.axios
         .post("http://localhost:8080/users/contacts", user)
         .then(function(response) {
