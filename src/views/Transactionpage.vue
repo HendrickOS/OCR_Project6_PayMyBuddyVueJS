@@ -143,8 +143,6 @@
   
     <v-card>
       <v-card-text>
-        {{transactions}}
-        <hr>
 
         <v-data-table
           :headers="headers"
@@ -163,31 +161,30 @@
       <v-card-actions
       >
 
-        Send money to your contacts 
+         
 
         <v-btn
-          fab
-          small
+          
           color="blue accent-2"
           dark
           @click="paymentDialog = !paymentDialog"
         >
+          Send money to your contacts
           <v-icon>mdi-arrow-up</v-icon>
         </v-btn>
 
         <v-spacer></v-spacer>
 
-        Pay : {{solde}} €
-        <hr>
-        {{montantCrediter}}
         
+        <hr>
           <v-btn
-          fab
-          small
+          
+          
           color="green accent-4"
           dark
           @click="supplyDialog = !supplyDialog"
         >
+          Pay : {{solde}} €
           <v-icon>mdi-plus</v-icon>
         </v-btn>
 

@@ -260,10 +260,6 @@ export default {
         });
     },
 
-    /* addReset () {
-      this.$refs.form.reset()
-    }, */
-
     selectForDelete(item){
       this.selectIdForDelete = item.id
       this.deleteDialog = true
@@ -290,10 +286,6 @@ export default {
         });
     },
 
-    /* close () {
-      this.$refs.form.resetValidation()
-    }, */
-    
   },
 
   data () {

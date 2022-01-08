@@ -27,7 +27,6 @@
       <v-row>
       <h1 class="display-1">PRESENTATION</h1>
       
-      <h2>Argent total des taxes : {{pmbMoney}}</h2>
       <p>Les fondateurs souhaitent développer l'activité et vous avez
          entendu parler d'une nouvelle idée de produit : une appli 
          qui permettrait aux clients de transférer de l'argent pour 
@@ -40,12 +39,7 @@
          transformer cette idée en un produit totalement fonctionnel 
          que les gens adoreront utiliser.</p>
     </v-row>
-    <v-row>
-      <div>
-       <div>Clique sur le bouton pour aller sur l'écran 2: </div> 
-       <v-btn color="primary" @click="goLoginpage">Go !</v-btn>
-      </div>
-    </v-row>
+    <h2>Argent total des taxes : {{pmbMoney}}</h2>
     </v-container>
 
   </v-sheet>
