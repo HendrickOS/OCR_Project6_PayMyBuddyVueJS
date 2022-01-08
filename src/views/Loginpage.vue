@@ -1,130 +1,44 @@
 <template>
 
-  <v-card
+  <div
     class="mx-auto overflow-hidden"
     height="600"
   >
-    <v-app-bar
-      color="blue" 
-      dark  
-    >
-      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
-      <v-toolbar-title>Pay My Buddy</v-toolbar-title>
-    </v-app-bar>
-
-    <v-navigation-drawer
-      v-model="drawer"
-      absolute
-      temporary
-    >
-      <v-list
-        nav
-        dense
-      >
-        <v-list-item-group
-          v-model="group"
-          active-class="deep-purple--text text--accent-4"
-        >
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-home</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>
-              <v-btn color="primary" @click="goHomepage">Home</v-btn>
-            </v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>
-              <v-btn color="primary" @click="goAccountpage">Account</v-btn>
-            </v-list-item-title>
-          </v-list-item>
-
-        </v-list-item-group>
-      </v-list>
-    </v-navigation-drawer>
 
     <v-container fluid>
       <v-row justify="space-around">
         
         <v-card
           elevation="4"
-          :loading="loading"
           class="mx-auto my-12"
           max-width="374"
         >
-          <v-tabs
-            v-model="tab"
-            background-color="deep-purple accent-4"
-            centered
-            dark
-            icons-and-text
-          >
-            <v-tabs-slider></v-tabs-slider>
-
-            <v-card-title>
-
-              <v-tab href="#tab-1">
-              Sign In
-              <v-icon>mdi-phone</v-icon>
-              </v-tab>
-
-              <v-tab href="#tab-2">
-              Sign Up
-              <v-icon>mdi-heart</v-icon>
-              </v-tab>
-
-            </v-card-title>
-          </v-tabs>
-
+        <v-card-title>Login</v-card-title>
           <v-card-text>
 
             <form>
-              <v-text-field
-                v-model="name"
-                :error-messages="nameErrors"
-                :counter="10"
-                label="Name"
-                required
-                @input="$v.name.$touch()"
-                @blur="$v.name.$touch()"
-              ></v-text-field>
 
               <v-text-field
-                v-model="email"
-                :error-messages="emailErrors"
-                label="E-mail"
+                v-model="username"
+                label="Username"
                 required
-                @input="$v.email.$touch()"
-                @blur="$v.email.$touch()"
               ></v-text-field>
 
               <v-text-field
                   v-model="password"
-                  :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                  :rules="[rules.required, rules.min]"
-                  :type="show1 ? 'text' : 'password'"
+                  :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="showPassword ? 'text' : 'password'"
                   name="input-10-1"
                   label="Password"
                   hint="At least 8 characters"
                   counter
-                  @click:append="show1 = !show1"
+                  @click:append="showPassword = !showPassword"
                 >
               ></v-text-field>
-
-              <v-checkbox
-                v-model="checkbox"
-                :error-messages="checkboxErrors"
-                label="Remember me"
-                required
-                @change="$v.checkbox.$touch()"
-                @blur="$v.checkbox.$touch()"
-              ></v-checkbox>
-
-              <v-btn class="mr-4" @click="submit"> connection </v-btn>
+              
+              <v-btn class="mr-4" :disabled="!validatedFields" @click="submit"> connection </v-btn>
+              <p class="pt-3">Newcomers: <a href="http://localhost:8081/#/createaccountpage"> Create Account </a></p>
+                
               
             </form>
 
@@ -134,13 +48,13 @@
       </v-row>
     </v-container>
 
-  </v-card>
+  </div>
 </template>
 
 <script>
 import commonMixin from "../mixin/commonMixin"
 export default {
-  name: "Accountpage",
+  name: "Loginpage",
   mixins: [commonMixin],
   created: function() {
     
@@ -148,10 +62,21 @@ export default {
 
   mounted: function() {
 
+    this.$emit('pagetitle', "Sign In")
+
   },
 
   computed: {   
 
+    
+
+    validatedFields: function () {
+        if (this.username != "" && this.password != "") {
+          return true;
+        } else {
+          return false;
+        }
+    },
   },
 
   methods: {
@@ -160,13 +85,24 @@ export default {
         this.navigate("homepage");
     },
 
+    goLoginpage: function() {
+        this.navigate("loginpage");
+    },
+
     goAccountpage: function() {
         this.navigate("accountpage");
     },
 
-    testOtherMethod: function() {
+    goTransactionpage: function() {
+      this.navigate("transactionpage");
+    },
+    goCreateAccountPage: function(){
+      this.navigate("createaccountpage");
+    },
+
+    logIn: function() {
        this.axios
-        .get("http://localhost:8080/contacts/list")
+        .get("http://localhost:8080/users/contacts/list")
         .then(function(response) {
           console.log(response)
         })
@@ -180,7 +116,8 @@ export default {
 
     submit:function(){
       let self = this
-      let user = {"username" : "springuser", "password" : "user123"}
+      let user = {"username" : this.username, "password" : this.password}
+
       this.axios
         .post("http://localhost:8080/login/", user)
         .then(function(response) {
@@ -188,10 +125,9 @@ export default {
           document.token=response.data;
            if (document.targetpage){
             self.navigate(document.targetpage)
+          } else {
+              self.navigate("accountpage")
           }
-
-          self.testOtherMethod();
-
         })
         .catch(function(error) {
           console.log(error)
@@ -199,28 +135,30 @@ export default {
         .finally(function() {
 
         });
+    },
 
-    }
-    
   },
 
-  data: () => ({
+  data () {
 
-    drawer: false,
-    group: null,
-    tab: null,
+    return {
+      username: 'springuser',
+      nom: '',
+      password: 'user123',
 
-    show1: false,
-    password: 'Password',
-    rules: {
-      required: value => !!value || 'Required.',
-    }
-  
-  }),
+      drawer: false,
+      group: null,
+      tab: null,
 
-  
+      showPassword: false,
+      name: 'Name',
+      rules: {
+        required: value => !!value || 'Required.',
+      }
+    };
+  },
+}
 
-};
 </script>
 
 <style>
@@ -240,8 +178,7 @@ export default {
 }
 
 .justify-space-around{
-  /* background: linear-gradient(green, yellow, rgba(0, 174, 255, 0.849)); */
-  background: url(https://hdfondsdecran.com/image/201609/69/motif-givre-merveilleux.jpg);
+  
 }
 
 </style>

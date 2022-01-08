@@ -4,48 +4,6 @@
     class="mx-auto overflow-hidden"
     height="800"
   >
-    <v-app-bar
-      color="blue" 
-      dark  
-    >
-      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
-
-      <v-toolbar-title>Pay My Buddy</v-toolbar-title>
-    </v-app-bar>
-
-    <v-navigation-drawer
-      v-model="drawer"
-      absolute
-      temporary
-    >
-      <v-list
-        nav
-        dense
-      >
-        <v-list-item-group
-          v-model="group"
-          active-class="deep-purple--text text--accent-4"
-        >
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-home</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>
-              <v-btn color="primary" @click="goHomepage">Home</v-btn>
-            </v-list-item-title>
-          </v-list-item>
-
-          <v-list-item>
-            <v-list-item-icon>
-              <v-icon>mdi-account</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>
-              <v-btn color="primary" @click="goAccountpage">Account</v-btn>
-            </v-list-item-title>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
-    </v-navigation-drawer>
 
     <v-sheet
       id="scrolling-techniques-7"
@@ -65,8 +23,11 @@
         ></v-img>
         
       </v-row>
+
       <v-row>
       <h1 class="display-1">PRESENTATION</h1>
+      
+      <h2>Argent total des taxes : {{pmbMoney}}</h2>
       <p>Les fondateurs souhaitent développer l'activité et vous avez
          entendu parler d'une nouvelle idée de produit : une appli 
          qui permettrait aux clients de transférer de l'argent pour 
@@ -82,7 +43,7 @@
     <v-row>
       <div>
        <div>Clique sur le bouton pour aller sur l'écran 2: </div> 
-       <v-btn color="primary" @click="goAccountpage">Go !</v-btn>
+       <v-btn color="primary" @click="goLoginpage">Go !</v-btn>
       </div>
     </v-row>
     </v-container>
@@ -91,7 +52,7 @@
 
   </v-card>
 </template>
-Title
+
 <script>
 import commonMixin from "../mixin/commonMixin"
 export default {
@@ -102,6 +63,10 @@ export default {
   },
 
   mounted: function() {
+
+    this.$emit('pagetitle', "Who are we ?")
+    this.loadPMBMoney()
+
   },
 
 
@@ -116,15 +81,42 @@ export default {
         this.navigate("homepage");
     },
 
-    goAccountpage: function() {
-        this.navigate("accountpage");
+    goLoginpage: function() {
+        this.navigate("loginpage");
     },
     
+    goTransactionpage: function() {
+      this.navigate("transactionpage");
+    },
+
+    loadPMBMoney: function(){
+      let self= this
+      this.axios
+        .get("http://localhost:8080/transactions/taxemoney")
+        .then(function(response) {
+          console.log(response)
+          self.pmbMoney = response.data
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+        .finally(function() {
+
+        });
+    },
+    
+    
   },
-  data: () => ({
-    drawer: false,
-    group: null,
-  })
+
+  data () {
+
+    return{
+
+      drawer: false,
+      group: null,
+      pmbMoney: 0,
+    }
+  },
 };
 </script>
 

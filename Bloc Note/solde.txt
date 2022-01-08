@@ -1,0 +1,95 @@
+ <v-dialog
+      v-model="supply"
+      max-width="500px"
+    >
+    <v-card
+        color="grey darken-3"
+        dark
+    >
+        <v-form
+          ref="form"
+          v-model="confirm"
+          lazy-validation
+        >
+          <v-text-field
+            v-model="crediterCompte"
+            label="Montant à créditer"
+          ></v-text-field>
+
+          <v-btn
+            :disabled="!confirm"
+            color="success"
+            class="mr-4"
+            @click="crediter"
+          >
+            Crediter
+          </v-btn>
+
+          <v-btn
+            color="blue darken-4"
+            @click="confirm = false"
+          >
+            Close
+          </v-btn>
+
+        </v-form>
+      </v-card>
+    </v-dialog>
+
+
+
+
+<v-card-actions
+      class="justify-end pr-15"
+    >
+    <v-text>
+          
+        Solde : {{solde}} €
+        <!-- <v-text-field
+            label="Solde actuel"
+            placeholder="Dense & Rounded"
+            filled
+            rounded
+            dense
+          ></v-text-field> -->
+          <v-btn
+          fab
+          small
+          color="green accent-4"
+          dark
+          @click="supply = !supply"
+        >
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+    </v-text>
+
+    </v-card-actions>
+
+
+
+
+methods : {
+
+    crediter () {
+      /* solde = this.solde + crediterCompte ; */
+      let self = this
+      let approvisionner = {
+        "montant" : this.montant,
+        /* "user" : this.user, */
+      }
+
+      this.axios
+        .post("http://localhost:8080/transaction/supplying", approvisionner)
+        .then(function(response) {
+          console.log(response)
+          /* self.accounts = response.data */
+        })
+        .catch(function(error) {
+          console.log(error)
+        })
+        .finally(function() {
+
+        });
+    },
+
+  },

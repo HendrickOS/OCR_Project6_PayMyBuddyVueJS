@@ -9,10 +9,15 @@ Vue.config.productionTip = false;
 import Homepage from "./views/Homepage.vue";
 import Accountpage from "./views/Accountpage.vue";
 import Loginpage from "./views/Loginpage.vue";
+import Transactionpage from "./views/Transactionpage.vue";
+import CreateAccountpage from "./views/CreateAccountpage.vue";
+import Settingspage from "./views/Settingspage.vue";
 
 import axios from "axios";
 import VueAxios from "vue-axios";
-/* document.token = "14";*/
+
+
+
 Vue.use(VueAxios, axios);
 
 axios.interceptors.request.use(
@@ -44,6 +49,21 @@ const router = new VueRouter({
             path: "/loginpage",
             name: "loginpage",
             component: Loginpage,
+        },
+        {
+            path: "/transactionpage",
+            name: "transactionpage",
+            component: Transactionpage,
+        },
+        {
+            path: "/createaccountpage",
+            name: "createaccountpage",
+            component: CreateAccountpage,
+        },
+        {
+            path: "/settingspage",
+            name: "settingspage",
+            component: Settingspage,
         },
         {
             path: "/",
