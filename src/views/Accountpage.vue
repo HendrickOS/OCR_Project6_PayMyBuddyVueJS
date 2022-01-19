@@ -92,14 +92,11 @@
   
     <v-card>
       <v-card-text>
-       <!--  {{accounts}}
+        USERS CONTACTS : {{accounts}}
         <hr>
-        test
+        ALL USERS : {{users}}
         <hr>
-        {{users}}
-        <hr>
-        <hr>
-        {{selectedContactId}} -->
+        USERS AVAIBLE TO ADD : {{selectedContactId}}
         <v-data-table
           :headers="headers"
           :items="accounts"

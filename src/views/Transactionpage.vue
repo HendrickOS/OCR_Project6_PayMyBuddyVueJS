@@ -331,12 +331,11 @@ export default {
 
     supplyAction () {
       let self = this
-      let supply = {
+      /* let supply = {
         "montant" : this.montantCrediter,
-      }
-      debugger
+      } */
       this.axios
-        .post("http://localhost:8080/users/supplying", supply)
+        .get("http://localhost:8080/users/supplying/"+ this.montantCrediter)
         .then(function(response) {
           console.log(response)
           self.solde = response.data

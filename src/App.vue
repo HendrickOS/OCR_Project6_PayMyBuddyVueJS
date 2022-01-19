@@ -51,7 +51,7 @@
             </v-list-item-content>
 
             <v-divider></v-divider>
-            {{"\n test"}}
+            
 
             <v-list-item-icon>
               <v-icon color="purple">mdi-wrench</v-icon>
